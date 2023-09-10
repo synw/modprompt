@@ -1,6 +1,6 @@
 import { templates } from "./db.js";
-import { useTemplate } from "./template.js";
+import { ModTemplate } from "./cls.js";
 import type { SpacingSlots, PromptBlock, TurnBlock, LmTemplate } from "@/interfaces.js";
 
-export { templates, useTemplate };
+export { templates, ModTemplate };
 export type { SpacingSlots, PromptBlock, TurnBlock, LmTemplate };

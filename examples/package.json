@@ -5,6 +5,6 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "modprompt": "^0.0.1"
+    "modprompt": "^0.0.2"
   }
 }

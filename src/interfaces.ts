@@ -22,7 +22,6 @@ interface LmTemplate {
   shots?: Array<TurnBlock>;
   stop?: Array<string>;
   linebreaks?: SpacingSlots;
-  spacing?: SpacingSlots;
 }
 
 export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate }

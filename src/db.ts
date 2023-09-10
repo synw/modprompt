@@ -14,6 +14,27 @@ const templates: Record<string, LmTemplate> = {
       "user": 2
     }
   },
+  "llama": {
+    "name": "Llama",
+    "system": {
+      "schema": "<s>[INST] <<SYS>>\n{system}\n<</SYS>>",
+      "message": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
+    },
+    "user": "{prompt}",
+    "assistant": " [/INST]",
+    "linebreaks": {
+      "system": 2,
+      "user": 0
+    }
+  },
+  "llama_instruct": {
+    "name": "Llama instruct",
+    "user": "[INST] {prompt}",
+    "assistant": " [/INST]",
+    "linebreaks": {
+      "user": 1
+    },
+  },
   "orca": {
     "name": "Orca",
     "system": {
@@ -26,6 +47,14 @@ const templates: Record<string, LmTemplate> = {
       "system": 2,
       "user": 2
     }
+  },
+  "vicuna": {
+    "name": "Vicuna",
+    "user": "USER: {prompt}",
+    "assistant": "### ASSISTANT:",
+    "linebreaks": {
+      "user": 2
+    },
   },
   "wizard_vicuna": {
     "name": "Wizard Vicuna",
