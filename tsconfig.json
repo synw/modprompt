@@ -42,5 +42,15 @@
     "node_modules",
     "dist",
     "test"
-  ]
+  ],
+  "typedocOptions": {
+    "name": "Modprompt documentation",
+    "readme": "none",
+    "entryPoints": [
+      "src/interfaces.ts",
+      "src/cls.ts",
+      "src/db.ts",
+    ],
+    "out": "docs",
+  }
 }
