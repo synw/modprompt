@@ -30,11 +30,11 @@ console.log(templateNames);
 To load a template:
 
 ```js
-import { templates, useTemplate } from "modprompt";
+import { templates, ModTemplate } from "modprompt";
 
-const tpl = useTemplate(templates.alpaca);
+const tpl = new ModTemplate(templates.alpaca)
 // or
-const tpl = useTemplate("alpaca");
+const tpl = new ModTemplate("alpaca")
 ```
 
 ### Render a template
@@ -109,9 +109,9 @@ is assembled in a prompt template. Example with custom user and assistant messag
 // modify system message
 tpl.afterSystem("You are a javascript specialist");
 // modify assistant message
-tpl.template.assistant = tpl.template.assistant + " (answer in valid json)"
+tpl.afterAssistant(" (answer in valid json)")
 // modify the prompt message
-tpl.template.user = tpl.template.user.replace("{prompt}", "fix this invalid json:\n\n```json\n{prompt}\n```")
+tpl.replacePrompt("fix this invalid json:\n\n```json\n{prompt}\n```")
 // add a one shot example
 tpl.addShot(
   "{'a':1,}",
@@ -147,6 +147,21 @@ fix this invalid json:
 ### Response: (answer in valid json)
 ```
 
+### Chainable api
+
+The calls can be chained. Example with the code above:
+
+```js
+const tpl = new ModTemplate(templates.llama)
+  .afterSystem("You are a javascript specialist")
+  .afterAssistant(" (answer in valid json)")
+  .replacePrompt("fix this invalid json:\n\n```json\n{prompt}\n```")
+  .addShot(
+    "{'a':1,}",
+    '\n\n```json\n{"a":1}\n```\n',
+  );
+```
+
 ## Types
 
 Template types:
@@ -176,7 +191,6 @@ interface LmTemplate {
   shots?: Array<TurnBlock>;
   stop?: Array<string>;
   linebreaks?: SpacingSlots;
-  spacing?: SpacingSlots;
 }
 ```
 
