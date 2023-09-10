@@ -8,6 +8,8 @@ A collection of prompt templates for language models
 - Easily modify and adapt templates on-the-fly
 - Few shots support
 
+:books: [Api doc](https://synw.github.io/modprompt/)
+
 ## Install
 
 ```bash
@@ -217,3 +219,5 @@ const orca: LmTemplate = {
   }
 }
 ```
+
+:books: [Api doc](https://synw.github.io/modprompt/)
