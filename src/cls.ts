@@ -37,9 +37,6 @@ class ModTemplate implements LmTemplate {
     this.name = tpl.name;
     this.user = tpl.user;
     this.assistant = tpl.assistant;
-    if (tpl?.system) {
-      this.system = tpl.system
-    }
     if (tpl?.shots) {
       this.shots = tpl.shots
     }
@@ -49,7 +46,9 @@ class ModTemplate implements LmTemplate {
     if (tpl?.linebreaks) {
       this.linebreaks = tpl.linebreaks
     }
-    this._systemBlock = this._buildSystemBlock();
+    if (tpl?.system) {
+      this._systemBlock = this._buildSystemBlock();
+    }
   }
 
   /**
