@@ -56,6 +56,17 @@ const templates: Record<string, LmTemplate> = {
       "user": 2
     },
   },
+  "vicuna_system": {
+    "name": "Vicuna system",
+    "system": {
+      "schema": "SYSTEM: {system}",
+    },
+    "user": "USER: {prompt}",
+    "assistant": "### ASSISTANT:",
+    "linebreaks": {
+      "user": 2
+    },
+  },
   "wizard_vicuna": {
     "name": "Wizard Vicuna",
     "user": "### Human:\n{prompt}",
@@ -64,6 +75,14 @@ const templates: Record<string, LmTemplate> = {
       "user": 2
     },
     "stop": ["<|endoftext|>"]
+  },
+  "guanaco": {
+    "name": "Guanaco",
+    "user": "### Human: {prompt}",
+    "assistant": "### Assistant:",
+    "linebreaks": {
+      "user": 1
+    },
   },
   "chatml": {
     "name": "ChatMl",
@@ -77,6 +96,33 @@ const templates: Record<string, LmTemplate> = {
       "user": 1,
       "assistant": 1,
     }
+  },
+  "mamba": {
+    "name": "Mamba",
+    "user": "<|prompt|>{prompt}</s>",
+    "assistant": "<|answer|>",
+    "stop": ["<|endoftext|>"]
+  },
+  "wizardlm": {
+    "name": "WizardLM",
+    "system": {
+      "schema": "{system}",
+      "message": "You are a helpful AI assistant."
+    },
+    "user": "USER: {prompt}",
+    "assistant": "ASSISTANT:",
+    "linebreaks": {
+      "user": 1
+    },
+  },
+  "human_response": {
+    "name": "Guanaco",
+    "user": "### HUMAN:\n{prompt}",
+    "assistant": "### RESPONSE:",
+    "linebreaks": {
+      "user": 2,
+      "assistant": 1
+    },
   },
 };
 
