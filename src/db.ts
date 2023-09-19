@@ -116,7 +116,7 @@ const templates: Record<string, LmTemplate> = {
     },
   },
   "human_response": {
-    "name": "Guanaco",
+    "name": "Human response",
     "user": "### HUMAN:\n{prompt}",
     "assistant": "### RESPONSE:",
     "linebreaks": {
@@ -124,6 +124,19 @@ const templates: Record<string, LmTemplate> = {
       "assistant": 1
     },
   },
+  "coding_assistant": {
+    "name": "Coding assistant",
+    "system": {
+      "schema": "{system}",
+      "message": "You are a coding assistant that will help the user to resolve the following instruction:"
+    },
+    "user": "### Instruction: {prompt}",
+    "assistant": "### Solution:",
+    "linebreaks": {
+      "user": 2,
+      "system": 1,
+    },
+  }
 };
 
 export { templates }
