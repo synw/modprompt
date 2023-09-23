@@ -9,12 +9,7 @@ export default {
   input: 'src/main.ts',
   output: [
     {
-      file: 'dist/mod.cjs.min.js',
-      format: 'cjs',
-      plugins: [terser(),]
-    },
-    {
-      file: 'dist/mod.es.js',
+      file: 'dist/mod.es.mjs',
       format: 'esm'
     },
     {

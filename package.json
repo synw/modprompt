@@ -1,6 +1,6 @@
 {
   "name": "modprompt",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Prompt templates for language models",
   "license": "MIT",
   "scripts": {
@@ -22,16 +22,15 @@
     "typedoc-plugin-rename-defaults": "^0.6.5",
     "typescript": "^5.2.2"
   },
+  "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/mod.cjs.min.js",
-  "module": "./dist/mod.es.js",
+  "module": "./dist/mod.es.mjs",
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/mod.es.js",
-      "require": "./dist/mod.cjs.min.js"
+      "import": "./dist/mod.es.mjs"
     }
   },
   "publishConfig": {

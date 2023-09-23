@@ -228,7 +228,7 @@ class ModTemplate implements LmTemplate {
   private _load(name: string): LmTemplate {
     try {
       if (name in templates) {
-        console.log("Loading", name)
+        //console.log("Loading", name)
         return templates[name];
       } else {
         throw new Error(`Template ${name} not found`)
