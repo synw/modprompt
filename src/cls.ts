@@ -5,9 +5,9 @@ import { templates } from "./db.js";
  * Represents a modified language model template.
  * 
  * @example
- * const tpl = new ModTemplate('alpaca');
+ * const tpl = new PromptTemplate('alpaca');
  */
-class ModTemplate implements LmTemplate {
+class PromptTemplate implements LmTemplate {
   name: string;
   user: string;
   assistant: string;
@@ -15,17 +15,16 @@ class ModTemplate implements LmTemplate {
   shots?: Array<TurnBlock>;
   stop?: Array<string>;
   linebreaks?: SpacingSlots;
-  spacing?: SpacingSlots;
   // internal state
   private _systemBlock = "";
 
   /**
-   * Constructs a new `ModTemplate` instance.
+   * Constructs a new `PromptTemplate` instance.
    * 
    * @param template - Either the name of the template to load or an instance of `LmTemplate`.
    * 
    * @example
-   * const tpl = new ModTemplate('alpaca');
+   * const tpl = new PromptTemplate('alpaca');
    */
   constructor(template: string | LmTemplate) {
     let tpl: LmTemplate
@@ -54,16 +53,57 @@ class ModTemplate implements LmTemplate {
     }
   }
 
+  cloneTo(name: string): PromptTemplate {
+    const tpl = new PromptTemplate(name);
+    if (this?.system) {
+      tpl.system = this.system
+    }
+    if (this?.shots) {
+      tpl.shots = this.shots
+    }
+    if (this?.stop) {
+      tpl.stop = this.stop
+    }
+    if (this?.linebreaks) {
+      tpl.linebreaks = this.linebreaks
+    }
+    if (tpl?.system) {
+      tpl.replaceSystem(this._buildSystemBlock());
+    }
+    return tpl
+  }
+
+  toJson(): LmTemplate {
+    const res: LmTemplate = {
+      name: this.name,
+      user: this.user,
+      assistant: this.assistant,
+    }
+    if (this?.system) {
+      this.system = this.system
+    }
+    if (this?.shots) {
+      this.shots = this.shots
+    }
+    if (this?.stop) {
+      this.stop = this.stop
+    }
+    if (this?.linebreaks) {
+      this.linebreaks = this.linebreaks
+    }
+    return res
+  }
+
   /**
    * Replaces the system block with a given message.
    * 
    * @param msg - The message to replace the system block with.
-   * @returns A reference to the current `ModTemplate` instance for chaining.
+   * @returns A reference to the current `PromptTemplate` instance for chaining.
    * 
    * @example
    * tpl.replaceSystem('You are a javascript expert');
    */
-  replaceSystem(msg: string): ModTemplate {
+  replaceSystem(msg: string): PromptTemplate {
     this._systemBlock = this._buildSystemBlock(msg);
     return this
   }
@@ -72,12 +112,12 @@ class ModTemplate implements LmTemplate {
    * Appends a given message after the system message.
    * 
    * @param msg - The message to append.
-   * @returns A reference to the current `ModTemplate` instance for chaining.
+   * @returns A reference to the current `PromptTemplate` instance for chaining.
    * 
    * @example
    * tpl.afterSystem('You are a javascript expert');
    */
-  afterSystem(msg: string): ModTemplate {
+  afterSystem(msg: string): PromptTemplate {
     if (!this.system) {
       throw new Error("This template has no system var")
     }
@@ -92,12 +132,12 @@ class ModTemplate implements LmTemplate {
    * Appends a given message after the assistant prompt token.
    * 
    * @param msg - The message to append.
-   * @returns A reference to the current `ModTemplate` instance for chaining.
+   * @returns A reference to the current `PromptTemplate` instance for chaining.
    * 
    * @example
    * tpl.afterAssistant('. Have a great day!');
    */
-  afterAssistant(msg: string): ModTemplate {
+  afterAssistant(msg: string): PromptTemplate {
     this.assistant = this.assistant + msg;
     return this
   }
@@ -106,12 +146,12 @@ class ModTemplate implements LmTemplate {
    * Replaces the `{prompt}` placeholder in the user message with a given message.
    * 
    * @param msg - The message to replace the placeholder with.
-   * @returns A reference to the current `ModTemplate` instance for chaining.
+   * @returns A reference to the current `PromptTemplate` instance for chaining.
    * 
    * @example
    * tpl.replacePrompt(fix this invalid json:\n\n```json\n{prompt}\n```);
    */
-  replacePrompt(msg: string): ModTemplate {
+  replacePrompt(msg: string): PromptTemplate {
     this.user = this.user.replace("{prompt}", msg);
     return this
   }
@@ -121,12 +161,12 @@ class ModTemplate implements LmTemplate {
    * 
    * @param user - The user's message.
    * @param assistant - The assistant's response.
-   * @returns A reference to the current `ModTemplate` instance for chaining.
+   * @returns A reference to the current `PromptTemplate` instance for chaining.
    * 
    * @example
    * tpl.addShot('Is it raining?', 'No, it is sunny.');
    */
-  addShot(user: string, assistant: string): ModTemplate {
+  addShot(user: string, assistant: string): PromptTemplate {
     if (!this?.shots) {
       this.shots = [];
     }
@@ -234,9 +274,9 @@ class ModTemplate implements LmTemplate {
         throw new Error(`Template ${name} not found`)
       }
     } catch (err) {
-      throw new Error(`Error loading template ${name}`)
+      throw new Error(`Error loading template ${name}: ${err}`)
     }
   }
 }
 
-export { ModTemplate }
+export { PromptTemplate }

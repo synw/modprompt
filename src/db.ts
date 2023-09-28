@@ -21,7 +21,7 @@ const templates: Record<string, LmTemplate> = {
       "message": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
     },
     "user": "{prompt}",
-    "assistant": " [/INST]",
+    "assistant": " [/INST] ",
     "linebreaks": {
       "system": 2,
       "user": 0
@@ -136,7 +136,7 @@ const templates: Record<string, LmTemplate> = {
       "user": 2,
       "system": 1,
     },
-  }
+  },
 };
 
 export { templates }
