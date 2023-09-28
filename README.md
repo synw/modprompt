@@ -36,11 +36,11 @@ console.log(templateNames);
 To load a template:
 
 ```js
-import { templates, ModTemplate } from "modprompt";
+import { templates, PromptTemplate } from "modprompt";
 
-const tpl = new ModTemplate(templates.alpaca)
+const tpl = new PromptTemplate(templates.alpaca)
 // or
-const tpl = new ModTemplate("alpaca")
+const tpl = new PromptTemplate("alpaca")
 ```
 
 ### Render a template
@@ -158,7 +158,7 @@ fix this invalid json:
 The calls can be chained. Example with the code above:
 
 ```js
-const tpl = new ModTemplate(templates.llama)
+const tpl = new PromptTemplate(templates.llama)
   .afterSystem("You are a javascript specialist")
   .afterAssistant(" (answer in valid json)")
   .replacePrompt("fix this invalid json:\n\n```json\n{prompt}\n```")
