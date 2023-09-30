@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { templates, ModTemplate } = require("modprompt");
+import { templates, ModTemplate } from "modprompt";
 
 console.log("Available templates:", Object.keys(templates));
 // load template

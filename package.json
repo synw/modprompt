@@ -1,6 +1,6 @@
 {
   "name": "modprompt",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Prompt templates for language models",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-typescript": "^11.1.3",
     "@types/node": "^20.6.0",

@@ -7,7 +7,8 @@ import { templates } from "./db.js";
  * @example
  * const tpl = new PromptTemplate('alpaca');
  */
-class PromptTemplate implements LmTemplate {
+class PromptTemplate {
+  id: string;
   name: string;
   user: string;
   assistant: string;
@@ -16,7 +17,7 @@ class PromptTemplate implements LmTemplate {
   stop?: Array<string>;
   linebreaks?: SpacingSlots;
   // internal state
-  private _systemBlock = "";
+  _systemBlock = "";
 
   /**
    * Constructs a new `PromptTemplate` instance.
@@ -33,6 +34,7 @@ class PromptTemplate implements LmTemplate {
     } else {
       tpl = template;
     }
+    this.id = tpl.id;
     this.name = tpl.name;
     this.user = tpl.user;
     this.assistant = tpl.assistant;
@@ -75,6 +77,7 @@ class PromptTemplate implements LmTemplate {
 
   toJson(): LmTemplate {
     const res: LmTemplate = {
+      id: this.id,
       name: this.name,
       user: this.user,
       assistant: this.assistant,

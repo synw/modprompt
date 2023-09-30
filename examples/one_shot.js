@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { templates, ModTemplate } = require("modprompt");
+import { templates } from "modprompt";
 
 console.log("Available templates:", Object.keys(templates));
 // load template
@@ -12,5 +12,7 @@ const tpl = new ModTemplate(templates.alpaca)
     "{'a':1,}",
     '\n\n```json\n{"a":1}\n```\n',
   );
+
+
 // render the template
 console.log(tpl.render())

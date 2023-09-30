@@ -76,6 +76,7 @@ interface TurnBlock {
  * 
  * @example
  * const sampleTemplate: LmTemplate = {
+ *  id: "alapaca",
  *  name: "Alpaca",
  *  system: {
  *    schema: "{system}",
@@ -90,6 +91,10 @@ interface TurnBlock {
  * };
  */
 interface LmTemplate {
+  /**
+   * The id slug of the template.
+   */
+  id: string;
   /**
    * The name of the template.
    */

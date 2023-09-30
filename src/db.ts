@@ -2,6 +2,7 @@ import { LmTemplate } from "./interfaces";
 
 const templates: Record<string, LmTemplate> = {
   "alpaca": {
+    "id": "alpaca",
     "name": "Alpaca",
     "system": {
       "schema": "{system}",
@@ -15,6 +16,7 @@ const templates: Record<string, LmTemplate> = {
     }
   },
   "llama": {
+    "id": "llama",
     "name": "Llama",
     "system": {
       "schema": "<s>[INST] <<SYS>>\n{system}\n<</SYS>>",
@@ -28,6 +30,7 @@ const templates: Record<string, LmTemplate> = {
     }
   },
   "llama_instruct": {
+    "id": "llama_instruct",
     "name": "Llama instruct",
     "user": "[INST] {prompt}",
     "assistant": " [/INST]",
@@ -35,7 +38,15 @@ const templates: Record<string, LmTemplate> = {
       "user": 1
     },
   },
+  "mistral": {
+    "id": "mistral",
+    "name": "Mistral",
+    "user": "<s>[INST] {prompt}",
+    "assistant": " [/INST]",
+    "stop": ["</s>"]
+  },
   "orca": {
+    "id": "orca",
     "name": "Orca",
     "system": {
       "schema": "### System:\n{system}",
@@ -49,6 +60,7 @@ const templates: Record<string, LmTemplate> = {
     }
   },
   "vicuna": {
+    "id": "vicuna",
     "name": "Vicuna",
     "user": "USER: {prompt}",
     "assistant": "### ASSISTANT:",
@@ -57,6 +69,7 @@ const templates: Record<string, LmTemplate> = {
     },
   },
   "vicuna_system": {
+    "id": "vicuna_system",
     "name": "Vicuna system",
     "system": {
       "schema": "SYSTEM: {system}",
@@ -68,6 +81,7 @@ const templates: Record<string, LmTemplate> = {
     },
   },
   "wizard_vicuna": {
+    "id": "wizard_vicuna",
     "name": "Wizard Vicuna",
     "user": "### Human:\n{prompt}",
     "assistant": "### ASSISTANT:",
@@ -77,6 +91,7 @@ const templates: Record<string, LmTemplate> = {
     "stop": ["<|endoftext|>"]
   },
   "guanaco": {
+    "id": "guanaco",
     "name": "Guanaco",
     "user": "### Human: {prompt}",
     "assistant": "### Assistant:",
@@ -85,6 +100,7 @@ const templates: Record<string, LmTemplate> = {
     },
   },
   "chatml": {
+    "id": "chatml",
     "name": "ChatMl",
     "system": {
       "schema": "<|im_start|>system\n{system}\n<|im_end|>",
@@ -98,12 +114,14 @@ const templates: Record<string, LmTemplate> = {
     }
   },
   "mamba": {
+    "id": "mamba",
     "name": "Mamba",
     "user": "<|prompt|>{prompt}</s>",
     "assistant": "<|answer|>",
     "stop": ["<|endoftext|>"]
   },
   "wizardlm": {
+    "id": "wizardlm",
     "name": "WizardLM",
     "system": {
       "schema": "{system}",
@@ -116,6 +134,7 @@ const templates: Record<string, LmTemplate> = {
     },
   },
   "human_response": {
+    "id": "human_response",
     "name": "Human response",
     "user": "### HUMAN:\n{prompt}",
     "assistant": "### RESPONSE:",
@@ -125,6 +144,7 @@ const templates: Record<string, LmTemplate> = {
     },
   },
   "coding_assistant": {
+    "id": "coding_assistant",
     "name": "Coding assistant",
     "system": {
       "schema": "{system}",

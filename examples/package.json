@@ -4,7 +4,8 @@
   "description": "Modprompt examples",
   "private": true,
   "license": "MIT",
+  "type": "module",
   "dependencies": {
-    "modprompt": "^0.0.2"
+    "modprompt": "^0.0.8"
   }
 }
