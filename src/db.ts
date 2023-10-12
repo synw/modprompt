@@ -111,7 +111,8 @@ const templates: Record<string, LmTemplate> = {
       "system": 1,
       "user": 1,
       "assistant": 1,
-    }
+    },
+    "stop": ["<|im_end|>"]
   },
   "mamba": {
     "id": "mamba",

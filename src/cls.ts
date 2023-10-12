@@ -19,6 +19,8 @@ class PromptTemplate {
   // internal state
   _extraSystem = "";
   _extraAssistant = "";
+  _replacePrompt = "";
+  _replaceSystem = "";
 
   /**
    * Constructs a new `PromptTemplate` instance.
@@ -53,27 +55,27 @@ class PromptTemplate {
     }
   }
 
-  cloneTo(name: string): PromptTemplate {
-    const tpl = new PromptTemplate(name);
-    if (this?.system) {
-      tpl.system = this.system
-    }
-    if (this?.shots) {
-      tpl.shots = this.shots
-    }
-    if (this?.stop) {
-      tpl.stop = this.stop
-    }
-    if (this?.linebreaks) {
-      tpl.linebreaks = this.linebreaks
+  cloneTo(template: string | LmTemplate, keepShots = true): PromptTemplate {
+    const tpl = new PromptTemplate(template);
+    if (keepShots) {
+      if (this?.shots) {
+        this.shots.forEach((s) => {
+          tpl.addShot(s.user, s.assistant)
+        })
+      }
     }
     if (this._extraSystem.length > 0) {
       tpl.afterSystem(this._extraSystem)
     }
+    if (this._replaceSystem.length > 0) {
+      tpl.replaceSystem(this._replaceSystem)
+    }
     if (this._extraAssistant.length > 0) {
       tpl.afterAssistant(this._extraAssistant)
     }
-    tpl.user = this.user
+    if (this._replacePrompt.length > 0) {
+      tpl.replacePrompt(this._replacePrompt)
+    }
     return tpl
   }
 
@@ -112,7 +114,7 @@ class PromptTemplate {
     if (!this.system) {
       return this
     }
-    this.system.message = msg;
+    this._replaceSystem = msg;
     return this
   }
 
@@ -128,9 +130,6 @@ class PromptTemplate {
   afterSystem(msg: string): PromptTemplate {
     if (!this.system) {
       return this
-    }
-    if (!this.system?.message) {
-      this.system.message = ""
     }
     this._extraSystem = msg;
     return this
@@ -160,7 +159,7 @@ class PromptTemplate {
    * tpl.replacePrompt(fix this invalid json:\n\n```json\n{prompt}\n```);
    */
   replacePrompt(msg: string): PromptTemplate {
-    this.user = this.user.replace("{prompt}", msg);
+    this._replacePrompt = msg;
     return this
   }
 
@@ -178,9 +177,15 @@ class PromptTemplate {
     if (!this?.shots) {
       this.shots = [];
     }
+    let _assistantMsg = assistant;
+    if (this.stop) {
+      if (this.stop.length > 0) {
+        _assistantMsg += this.stop[0]
+      }
+    }
     this.shots.push({
       user: user,
-      assistant: assistant,
+      assistant: _assistantMsg,
     });
     return this
   }
@@ -215,6 +220,7 @@ class PromptTemplate {
     buf.push(this._buildUserBlock());
     // assistant block
     buf.push(this._buildAssistantBlock());
+    //console.log(buf)
     return buf.join("");
   }
 
@@ -238,6 +244,9 @@ class PromptTemplate {
     if (!this?.system) {
       return ""
     }
+    if (this._replaceSystem) {
+      this.system.message = this._replaceSystem;
+    }
     if (this.system?.message) {
       res = this.system.schema.replace("{system}", this.system.message)
     } else {
@@ -251,12 +260,18 @@ class PromptTemplate {
 
   private _buildUserBlock(msg?: string): string {
     let buf = [];
-    buf.push(this.user);
+    // prompt replacement
+    let _userBlock = this.user;
+    if (this._replacePrompt.length > 0) {
+      _userBlock = _userBlock.replace("{prompt}", this._replacePrompt)
+    }
+    buf.push(_userBlock);
     if (this?.linebreaks?.user) {
       buf.push("\n".repeat(this.linebreaks.user))
     }
     if (msg) {
-      buf[0] = buf[0].replace("{prompt}", msg)
+      // this is a shot
+      buf[0] = _userBlock.replace("{prompt}", msg);
     }
     return buf.join("")
   }
@@ -272,7 +287,8 @@ class PromptTemplate {
       buf.push("\n".repeat(this.linebreaks.assistant))
     }
     if (msg) {
-      buf[0] = buf[0] + msg + "\n"
+      // this is a shot
+      buf[0] = buf[0] + msg
     }
     return buf.join("")
   }
