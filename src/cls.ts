@@ -17,7 +17,8 @@ class PromptTemplate {
   stop?: Array<string>;
   linebreaks?: SpacingSlots;
   // internal state
-  _systemBlock = "";
+  _extraSystem = "";
+  _extraAssistant = "";
 
   /**
    * Constructs a new `PromptTemplate` instance.
@@ -50,9 +51,6 @@ class PromptTemplate {
     if (tpl?.linebreaks) {
       this.linebreaks = tpl.linebreaks
     }
-    if (tpl?.system) {
-      this._systemBlock = this._buildSystemBlock();
-    }
   }
 
   cloneTo(name: string): PromptTemplate {
@@ -69,9 +67,13 @@ class PromptTemplate {
     if (this?.linebreaks) {
       tpl.linebreaks = this.linebreaks
     }
-    if (tpl?.system) {
-      tpl.replaceSystem(this._buildSystemBlock());
+    if (this._extraSystem.length > 0) {
+      tpl.afterSystem(this._extraSystem)
     }
+    if (this._extraAssistant.length > 0) {
+      tpl.afterAssistant(this._extraAssistant)
+    }
+    tpl.user = this.user
     return tpl
   }
 
@@ -107,7 +109,10 @@ class PromptTemplate {
    * tpl.replaceSystem('You are a javascript expert');
    */
   replaceSystem(msg: string): PromptTemplate {
-    this._systemBlock = this._buildSystemBlock(msg);
+    if (!this.system) {
+      return this
+    }
+    this.system.message = msg;
     return this
   }
 
@@ -122,12 +127,12 @@ class PromptTemplate {
    */
   afterSystem(msg: string): PromptTemplate {
     if (!this.system) {
-      throw new Error("This template has no system var")
+      return this
     }
     if (!this.system?.message) {
       this.system.message = ""
     }
-    this._systemBlock = this._buildSystemBlock(this.system.message + " " + msg);
+    this._extraSystem = msg;
     return this
   }
 
@@ -138,10 +143,10 @@ class PromptTemplate {
    * @returns A reference to the current `PromptTemplate` instance for chaining.
    * 
    * @example
-   * tpl.afterAssistant('. Have a great day!');
+   * tpl.afterAssistant('( answer in json )');
    */
   afterAssistant(msg: string): PromptTemplate {
-    this.assistant = this.assistant + msg;
+    this._extraAssistant = msg;
     return this
   }
 
@@ -192,8 +197,9 @@ class PromptTemplate {
   render(): string {
     const buf = new Array<string>();
     // system prompt if any
-    if (this._systemBlock.length > 0) {
-      buf.push(this._systemBlock);
+    const _systemBlock = this._buildSystemBlock();
+    if (_systemBlock.length > 0) {
+      buf.push(_systemBlock);
       if (this?.linebreaks?.system) {
         buf.push("\n".repeat(this.linebreaks.system))
       }
@@ -227,19 +233,18 @@ class PromptTemplate {
   }
 
 
-  private _buildSystemBlock(systemMsg?: string): string {
+  private _buildSystemBlock(): string {
     let res = "";
     if (!this?.system) {
-      throw new Error(`The template ${this.name} has no system var`)
+      return ""
     }
-    if (systemMsg) {
-      res = this.system.schema.replace("{system}", systemMsg)
+    if (this.system?.message) {
+      res = this.system.schema.replace("{system}", this.system.message)
     } else {
-      if (this.system?.message) {
-        res = this.system.schema.replace("{system}", this.system.message)
-      } else {
-        res = this.system.schema
-      }
+      res = this.system.schema.replace("{system}", "")
+    }
+    if (this._extraSystem) {
+      res = res + this._extraSystem
     }
     return res
   }
@@ -258,7 +263,11 @@ class PromptTemplate {
 
   private _buildAssistantBlock(msg?: string): string {
     let buf = [];
-    buf.push(this.assistant);
+    let amsg = this.assistant;
+    if (this._extraAssistant.length > 0) {
+      amsg += this._extraAssistant
+    }
+    buf.push(amsg);
     if (this?.linebreaks?.assistant) {
       buf.push("\n".repeat(this.linebreaks.assistant))
     }
