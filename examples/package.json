@@ -6,6 +6,6 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "modprompt": "^0.0.8"
+    "modprompt": "^0.0.10"
   }
 }
