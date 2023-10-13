@@ -137,6 +137,14 @@ interface LmTemplate {
    * This can be used to format the rendered conversation.
    */
   linebreaks?: SpacingSlots;
+  /**
+   * String to display after a shot
+   */
+  afterShot?: string;
+  /**
+   * A prefix like a bos token to insert before content
+   */
+  prefix?: string;
 }
 
 export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate }

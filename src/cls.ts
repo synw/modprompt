@@ -16,6 +16,8 @@ class PromptTemplate {
   shots?: Array<TurnBlock>;
   stop?: Array<string>;
   linebreaks?: SpacingSlots;
+  afterShot?: string;
+  prefix?: string;
   // internal state
   _extraSystem = "";
   _extraAssistant = "";
@@ -41,18 +43,12 @@ class PromptTemplate {
     this.name = tpl.name;
     this.user = tpl.user;
     this.assistant = tpl.assistant;
-    if (tpl?.system) {
-      this.system = tpl.system
-    }
-    if (tpl?.shots) {
-      this.shots = tpl.shots
-    }
-    if (tpl?.stop) {
-      this.stop = tpl.stop
-    }
-    if (tpl?.linebreaks) {
-      this.linebreaks = tpl.linebreaks
-    }
+    this.system = tpl.system;
+    this.shots = tpl.shots;
+    this.stop = tpl.stop;
+    this.linebreaks = tpl.linebreaks;
+    this.afterShot = tpl.afterShot;
+    this.prefix = tpl.prefix;
   }
 
   cloneTo(template: string | LmTemplate, keepShots = true): PromptTemplate {
@@ -178,11 +174,6 @@ class PromptTemplate {
       this.shots = [];
     }
     let _assistantMsg = assistant;
-    if (this.stop) {
-      if (this.stop.length > 0) {
-        _assistantMsg += this.stop[0]
-      }
-    }
     this.shots.push({
       user: user,
       assistant: _assistantMsg,
@@ -201,6 +192,10 @@ class PromptTemplate {
    */
   render(): string {
     const buf = new Array<string>();
+    // prefix
+    if (this.prefix) {
+      buf.push(this.prefix)
+    }
     // system prompt if any
     const _systemBlock = this._buildSystemBlock();
     if (_systemBlock.length > 0) {
@@ -213,7 +208,13 @@ class PromptTemplate {
     if (this?.shots) {
       for (const shot of this.shots) {
         buf.push(this._buildUserBlock(shot.user));
-        buf.push(this._buildAssistantBlock(shot.assistant))
+        let _assistantMsg = shot.assistant;
+        if (this.afterShot) {
+          _assistantMsg += this.afterShot
+        } else {
+          _assistantMsg += "\n\n"
+        }
+        buf.push(this._buildAssistantBlock(_assistantMsg));
       }
     }
     // user block
@@ -248,12 +249,10 @@ class PromptTemplate {
       this.system.message = this._replaceSystem;
     }
     if (this.system?.message) {
-      res = this.system.schema.replace("{system}", this.system.message)
-    } else {
-      res = this.system.schema.replace("{system}", "")
-    }
-    if (this._extraSystem) {
-      res = res + this._extraSystem
+      res = this.system.schema.replace("{system}", this.system.message);
+      if (this._extraSystem) {
+        res = res + this._extraSystem
+      }
     }
     return res
   }

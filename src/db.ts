@@ -19,7 +19,7 @@ const templates: Record<string, LmTemplate> = {
     "id": "llama",
     "name": "Llama",
     "system": {
-      "schema": "<s>[INST] <<SYS>>\n{system}\n<</SYS>>",
+      "schema": "[INST] <<SYS>>\n{system}\n<</SYS>>",
       "message": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
     },
     "user": "{prompt}",
@@ -27,7 +27,8 @@ const templates: Record<string, LmTemplate> = {
     "linebreaks": {
       "system": 2,
       "user": 0
-    }
+    },
+    "prefix": "<s>",
   },
   "llama_instruct": {
     "id": "llama_instruct",
@@ -41,9 +42,11 @@ const templates: Record<string, LmTemplate> = {
   "mistral": {
     "id": "mistral",
     "name": "Mistral",
-    "user": "<s>[INST] {prompt}",
+    "user": "[INST] {prompt}",
     "assistant": " [/INST]",
-    "stop": ["</s>"]
+    "stop": ["</s>"],
+    "afterShot": "\n",
+    "prefix": "<s>",
   },
   "orca": {
     "id": "orca",
@@ -57,7 +60,7 @@ const templates: Record<string, LmTemplate> = {
     "linebreaks": {
       "system": 2,
       "user": 2
-    }
+    },
   },
   "vicuna": {
     "id": "vicuna",
@@ -112,7 +115,8 @@ const templates: Record<string, LmTemplate> = {
       "user": 1,
       "assistant": 1,
     },
-    "stop": ["<|im_end|>"]
+    "stop": ["<|im_end|>"],
+    "afterShot": " <|im_end|>",
   },
   "mamba": {
     "id": "mamba",
