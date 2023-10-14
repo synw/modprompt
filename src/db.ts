@@ -1,6 +1,12 @@
 import { LmTemplate } from "./interfaces";
 
 const templates: Record<string, LmTemplate> = {
+  "none": {
+    "id": "none",
+    "name": "No template",
+    "user": "{prompt}",
+    "assistant": "",
+  },
   "alpaca": {
     "id": "alpaca",
     "name": "Alpaca",
