@@ -94,6 +94,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "USER: {prompt}",
     "assistant": "### ASSISTANT:",
     "linebreaks": {
+      "system": 2,
       "user": 2
     },
   },
@@ -156,6 +157,10 @@ const templates: Record<string, LmTemplate> = {
     },
     "user": "USER: {prompt}",
     "assistant": "ASSISTANT:",
+    "linebreaks": {
+      "system": 1,
+      "user": 1,
+    },
   },
   "wizardlm": {
     "id": "wizardlm",
@@ -179,21 +184,7 @@ const templates: Record<string, LmTemplate> = {
       "user": 2,
       "assistant": 1
     },
-  },
-  "coding_assistant": {
-    "id": "coding_assistant",
-    "name": "Coding assistant",
-    "system": {
-      "schema": "{system}",
-      "message": "You are a coding assistant that will help the user to resolve the following instruction:"
-    },
-    "user": "### Instruction: {prompt}",
-    "assistant": "### Solution:",
-    "linebreaks": {
-      "user": 2,
-      "system": 1,
-    },
-  },
+  }
 };
 
 export { templates }

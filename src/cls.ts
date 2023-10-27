@@ -190,14 +190,14 @@ class PromptTemplate {
    * const rendered = tpl.render();
    * console.log(rendered);
    */
-  render(): string {
+  render(skip_empty_system: boolean = false): string {
     const buf = new Array<string>();
     // prefix
     if (this.prefix) {
       buf.push(this.prefix)
     }
     // system prompt if any
-    const _systemBlock = this._buildSystemBlock();
+    const _systemBlock = this._buildSystemBlock(skip_empty_system);
     if (_systemBlock.length > 0) {
       buf.push(_systemBlock);
       if (this?.linebreaks?.system) {
@@ -240,7 +240,7 @@ class PromptTemplate {
   }
 
 
-  private _buildSystemBlock(): string {
+  private _buildSystemBlock(skip_empty_system: boolean = false): string {
     let res = "";
     if (!this?.system) {
       return ""
@@ -253,6 +253,8 @@ class PromptTemplate {
       if (this._extraSystem) {
         res = res + this._extraSystem
       }
+    } else if (!skip_empty_system) {
+      res = this.system.schema;
     }
     return res
   }

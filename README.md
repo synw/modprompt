@@ -97,6 +97,26 @@ To append to a system message:
 tpl.afterSystem("You are a javascript specialist");
 ```
 
+Note: some templates does have a system schema but no default system message. Some templates
+don't even have a system block. The default `render` will show the system schema: exemple for the Vicuna system template:
+
+```
+SYSTEM: {system}
+
+USER: {prompt}
+
+### ASSISTANT:
+```
+
+In case of empty system message it is possible to skip it using the
+`skip_empty_system` option: outptut of `tpl.render(true)`:
+
+```
+USER: {prompt}
+
+### ASSISTANT:
+```
+
 ### Example shots
 
 The templates have support for example shots. Add one shot:
