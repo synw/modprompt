@@ -18,7 +18,8 @@
       "dom"
     ],
     "types": [
-      "node"
+      "node",
+      "jest"
     ],
     "baseUrl": ".",
     "paths": {
