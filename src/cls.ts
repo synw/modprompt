@@ -287,7 +287,7 @@ class PromptTemplate {
     }
     if (msg) {
       // this is a shot
-      buf[0] = buf[0] + msg
+      buf.push(msg)
     }
     return buf.join("")
   }

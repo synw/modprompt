@@ -45,6 +45,14 @@ const templates: Record<string, LmTemplate> = {
       "user": 1
     },
   },
+  "amazon": {
+    "id": "amazon",
+    "name": "Amazon",
+    "user": "<|prompter|>{prompt}</s>",
+    "assistant": "<|assistant|>",
+    "afterShot": "\n",
+    "stop": ["</s>"],
+  },
   "mistral": {
     "id": "mistral",
     "name": "Mistral",
@@ -124,12 +132,30 @@ const templates: Record<string, LmTemplate> = {
     "stop": ["<|im_end|>"],
     "afterShot": " <|im_end|>",
   },
-  "mamba": {
-    "id": "mamba",
-    "name": "Mamba",
-    "user": "<|prompt|>{prompt}</s>",
-    "assistant": "<|answer|>",
-    "stop": ["<|endoftext|>"]
+  "zephyr": {
+    "id": "zephyr",
+    "name": "Zephyr",
+    "system": {
+      "schema": "<|system|>\n{system}</s>",
+    },
+    "user": "<|user|>\n{prompt}</s>",
+    "assistant": "<|assistant|>",
+    "linebreaks": {
+      "system": 1,
+      "user": 1,
+      "assistant": 1,
+    },
+    "afterShot": "\n",
+  },
+  "synthia-cot": {
+    "id": "synthia-cot",
+    "name": "Synthia CoT",
+    "system": {
+      "schema": "SYSTEM: {system}",
+      "message": "Elaborate on the topic using a Tree of Thoughts and backtrack when necessary to construct a clear, cohesive Chain of Thought reasoning. Always answer without hesitation."
+    },
+    "user": "USER: {prompt}",
+    "assistant": "ASSISTANT:",
   },
   "wizardlm": {
     "id": "wizardlm",
