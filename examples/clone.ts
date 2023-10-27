@@ -18,6 +18,6 @@ const tpl = new PromptTemplate(templates.alpaca)
 console.log(tpl.render());
 
 // clone
-console.log("Cloning the template to Orca format:\n\n");
-const ntpl = tpl.cloneTo("orca");
+console.log("Cloning the template to Chatml format:\n\n");
+const ntpl = tpl.cloneTo("chatml");
 console.log(ntpl.render())

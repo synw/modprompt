@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import { templates, ModelTemplate } from "modprompt";
+import { templates, PromptTemplate } from "modprompt";
 
-console.log("Available templates:", Object.keys(templates));
+//console.log("Available templates:", Object.keys(templates));
 // load template
-const tpl = new ModelTemplate(templates.alpaca)
+const tpl = new PromptTemplate(templates.alpaca)
   .afterSystem("You are a javascript specialist")
   .afterAssistant(" (answer in valid json)")
   .replacePrompt("fix this invalid json:\n\n```json\n{prompt}\n```")
