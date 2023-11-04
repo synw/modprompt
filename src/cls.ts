@@ -82,17 +82,23 @@ class PromptTemplate {
       user: this.user,
       assistant: this.assistant,
     }
+    if (this?.prefix) {
+      res.prefix = this.prefix
+    }
     if (this?.system) {
-      this.system = this.system
+      res.system = this.system
     }
     if (this?.shots) {
-      this.shots = this.shots
+      res.shots = this.shots
+    }
+    if (this?.afterShot) {
+      res.afterShot = this.afterShot
     }
     if (this?.stop) {
-      this.stop = this.stop
+      res.stop = this.stop
     }
     if (this?.linebreaks) {
-      this.linebreaks = this.linebreaks
+      res.linebreaks = this.linebreaks
     }
     return res
   }

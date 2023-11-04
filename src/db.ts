@@ -35,15 +35,7 @@ const templates: Record<string, LmTemplate> = {
       "user": 0
     },
     "prefix": "<s>",
-  },
-  "llama_instruct": {
-    "id": "llama_instruct",
-    "name": "Llama instruct",
-    "user": "[INST] {prompt}",
-    "assistant": " [/INST]",
-    "linebreaks": {
-      "user": 1
-    },
+    "stop": ["</s>"],
   },
   "amazon": {
     "id": "amazon",
