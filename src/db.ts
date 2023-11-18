@@ -167,6 +167,13 @@ const templates: Record<string, LmTemplate> = {
       "user": 1
     },
   },
+  "openchat": {
+    "id": "openchat",
+    "name": "OpenChat",
+    "user": "GPT4 User: {prompt}<|end_of_turn|>",
+    "assistant": "GPT4 Assistant:",
+    "stop": ["<|end_of_turn|>"]
+  },
   "human_response": {
     "id": "human_response",
     "name": "Human response",
