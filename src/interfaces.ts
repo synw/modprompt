@@ -1,5 +1,8 @@
 /**
  * Defines the spacing (in terms of line breaks) to be applied between different parts of the conversation.
+ *
+ * @interface SpacingSlots
+ * @typedef {SpacingSlots}
  * 
  * @example
  * const spacingExample: SpacingSlots = {
@@ -149,19 +152,19 @@ interface LmTemplate {
 
 
 /**
- * _description_
+ * Image data
  *
  * @interface ImgData
  * @typedef {ImgData}
  */
 interface ImgData {
   id: string;
-  data: string;
+  data: number;
 }
 
 
 /**
- * _description_
+ * A history turn
  *
  * @interface HistoryTurn
  * @typedef {HistoryTurn}
