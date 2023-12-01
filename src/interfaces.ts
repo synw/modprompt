@@ -147,10 +147,30 @@ interface LmTemplate {
   prefix?: string;
 }
 
+
+/**
+ * _description_
+ *
+ * @interface ImgData
+ * @typedef {ImgData}
+ */
+interface ImgData {
+  id: string;
+  data: string;
+  bytes: ArrayBuffer;
+}
+
+
+/**
+ * _description_
+ *
+ * @interface HistoryTurn
+ * @typedef {HistoryTurn}
+ */
 interface HistoryTurn {
   user: string;
   assistant: string;
-  images?: Array<{ id: string, data: ArrayBuffer }>;
+  images?: Array<ImgData>;
 }
 
-export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate, HistoryTurn }
+export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate, HistoryTurn, ImgData }
