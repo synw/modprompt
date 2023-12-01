@@ -1,4 +1,4 @@
-import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots } from "./interfaces";
+import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn } from "./interfaces";
 import { templates } from "./db.js";
 
 /**
@@ -12,6 +12,7 @@ class PromptTemplate {
   name: string;
   user: string;
   assistant: string;
+  history: Array<HistoryTurn> = [];
   system?: PromptBlock;
   shots?: Array<TurnBlock>;
   stop?: Array<string>;
@@ -187,6 +188,26 @@ class PromptTemplate {
     return this
   }
 
+
+  /**
+   * Render a turn block
+   *
+   * @param {TurnBlock | HistoryTurn} shot the shot to render
+   * @returns {string} ther rendered text
+   */
+  renderShot(shot: TurnBlock | HistoryTurn): string {
+    const buf = [];
+    buf.push(this._buildUserBlock(shot.user));
+    let _assistantMsg = shot.assistant;
+    if (this.afterShot) {
+      _assistantMsg += this.afterShot
+    } else {
+      _assistantMsg += "\n\n"
+    }
+    buf.push(this._buildAssistantBlock(_assistantMsg));
+    return buf.join("")
+  }
+
   /**
    * Renders the template into a string representation.
    * 
@@ -213,15 +234,12 @@ class PromptTemplate {
     // shots
     if (this?.shots) {
       for (const shot of this.shots) {
-        buf.push(this._buildUserBlock(shot.user));
-        let _assistantMsg = shot.assistant;
-        if (this.afterShot) {
-          _assistantMsg += this.afterShot
-        } else {
-          _assistantMsg += "\n\n"
-        }
-        buf.push(this._buildAssistantBlock(_assistantMsg));
+        buf.push(this.renderShot(shot));
       }
+    }
+    // history
+    for (const turn of this.history) {
+      buf.push(this.renderShot(turn));
     }
     // user block
     buf.push(this._buildUserBlock());
@@ -246,7 +264,19 @@ class PromptTemplate {
   }
 
 
-  private _buildSystemBlock(skip_empty_system: boolean = false): string {
+  /**
+   * Push a turn into history
+   *
+   * @param {HistoryTurn} turn the history turn
+   * @returns {PromptTemplate}
+   */
+  pushToHistory(turn: HistoryTurn): PromptTemplate {
+    this.history.push(turn)
+    return this
+  }
+
+
+  private _buildSystemBlock(skip_empty_system: boolean): string {
     let res = "";
     if (!this?.system) {
       return ""

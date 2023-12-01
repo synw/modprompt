@@ -147,4 +147,10 @@ interface LmTemplate {
   prefix?: string;
 }
 
-export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate }
+interface HistoryTurn {
+  user: string;
+  assistant: string;
+  images?: Array<{ id: string, data: ArrayBuffer }>;
+}
+
+export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate, HistoryTurn }
