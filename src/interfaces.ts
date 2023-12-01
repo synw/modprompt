@@ -158,8 +158,8 @@ interface LmTemplate {
  * @typedef {ImgData}
  */
 interface ImgData {
-  id: string;
-  data: number;
+  id: number;
+  data: string;
 }
 
 
