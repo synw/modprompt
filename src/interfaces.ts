@@ -157,7 +157,6 @@ interface LmTemplate {
 interface ImgData {
   id: string;
   data: string;
-  bytes: ArrayBuffer;
 }
 
 
