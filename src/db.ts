@@ -37,14 +37,6 @@ const templates: Record<string, LmTemplate> = {
     "prefix": "<s>",
     "stop": ["</s>"],
   },
-  "amazon": {
-    "id": "amazon",
-    "name": "Amazon",
-    "user": "<|prompter|>{prompt}</s>",
-    "assistant": "<|assistant|>",
-    "afterShot": "\n",
-    "stop": ["</s>"],
-  },
   "mistral": {
     "id": "mistral",
     "name": "Mistral",
@@ -183,6 +175,24 @@ const templates: Record<string, LmTemplate> = {
       "user": 2,
       "assistant": 1
     },
+  },
+  "minichat": {
+    "id": "minichat",
+    "name": "Minichat",
+    "user": "<s> [|User|] {prompt} </s>",
+    "assistant": "[|Assistant|]",
+    "stop": ["</s>", "[|User|]"],
+    "afterShot": "\n",
+  },
+  "phi": {
+    "id": "phi",
+    "name": "Phi",
+    "user": "Instruct: {prompt}",
+    "assistant": "Output:",
+    "linebreaks": {
+      "user": 1
+    },
+    "stop": ["</s>", "Instruct:"]
   }
 };
 
