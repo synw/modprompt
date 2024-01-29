@@ -166,6 +166,13 @@ const templates: Record<string, LmTemplate> = {
     "assistant": "GPT4 Assistant:",
     "stop": ["<|end_of_turn|>"]
   },
+  "openchat-correct": {
+    "id": "openchat",
+    "name": "OpenChat",
+    "user": "GPT4 Correct User: {prompt}<|end_of_turn|>",
+    "assistant": "GPT4 Correct Assistant:",
+    "stop": ["<|end_of_turn|>"]
+  },
   "human_response": {
     "id": "human_response",
     "name": "Human response",
@@ -193,6 +200,21 @@ const templates: Record<string, LmTemplate> = {
       "user": 1
     },
     "stop": ["</s>", "Instruct:"]
+  },
+  "deepseek": {
+    "id": "deepseek",
+    "name": "Deepseek",
+    "system": {
+      "schema": "{system}",
+      "message": "You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer."
+    },
+    "user": "### Instruction:\n{prompt}",
+    "assistant": "### Response:",
+    "linebreaks": {
+      "user": 1,
+      "system": 1,
+    },
+    "stop": ["<|EOT|>", "### Instruction:"]
   }
 };
 
