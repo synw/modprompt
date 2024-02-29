@@ -6,7 +6,7 @@ A collection of prompt templates for language models
 
 - Classic templates formats for different models
 - Easily modify and adapt templates on-the-fly
-- Few shots support
+- Few shots and conversation history support
 
 :books: [Api doc](https://synw.github.io/modprompt/)
 
@@ -77,7 +77,7 @@ The template have system messages support if the original template supports it.
 To replace a system message:
 
 ```js
-tpl.system("You are a javascript specialist");
+tpl.replaceSystem("You are a javascript specialist");
 ```
 
 Rendering for an Alpaca template:
