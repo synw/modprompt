@@ -52,6 +52,20 @@ class PromptTemplate {
     this.prefix = tpl.prefix;
   }
 
+  /**
+   * Clones the current `PromptTemplate` instance to a new instance of `PromptTemplate`.
+   *
+   * This function creates a new `PromptTemplate` instance with the same state as the current instance.
+   * It is useful when you want to work with a copy of the current template without modifying the original one.
+   *
+   * @param {string} id - The id of the new `PromptTemplate`.
+   * @returns {PromptTemplate} - A new `PromptTemplate` instance with the same state as the current one.
+   *
+   * @example
+   * const tpl = new PromptTemplate('alpaca');
+   * const clonedTpl = tpl.cloneTo('chatml');
+   * console.log(clonedTpl);
+   */
   cloneTo(template: string | LmTemplate, keepShots = true): PromptTemplate {
     const tpl = new PromptTemplate(template);
     if (keepShots) {
@@ -76,6 +90,19 @@ class PromptTemplate {
     return tpl
   }
 
+  /**
+* Converts the current `PromptTemplate` instance to a JSON object.
+*
+* This function serializes the current state of the `PromptTemplate` instance into a JSON object,
+* which can be used for storing the template or transmitting it over a network.
+*
+* @returns {LmTemplate} - A JSON object representing the current state of the `PromptTemplate`.
+*
+* @example
+* const tpl = new PromptTemplate('alpaca');
+* const json = tpl.toJson();
+* console.log(json);
+*/
   toJson(): LmTemplate {
     const res: LmTemplate = {
       id: this.id,
@@ -188,6 +215,26 @@ class PromptTemplate {
     return this
   }
 
+  /**
+   * Adds multiple shots (user-assistant interactions) to the template.
+   *
+   * This function allows you to add multiple turns to the conversation. Each turn is represented by an object
+   * with a 'user' property (the user's message) and an 'assistant' property (the assistant's response).
+   *
+   * @param {Array<TurnBlock>} shots - An array of objects, where each object represents a user-assistant interaction.
+   * @returns {PromptTemplate} - A reference to the current `PromptTemplate` instance for chaining.
+   *
+   * @example
+   * const tpl = new PromptTemplate('alpaca');
+   * tpl.addShots([
+   *   { user: 'What is the weather like?', assistant: 'It is sunny today!' },
+   *   { user: 'What is the weather like tomorrow?', assistant: 'I am sorry, but I can\'t predict the future.' }
+   * ]);
+   */
+  addShots(shots: Array<TurnBlock>): PromptTemplate {
+    shots.forEach((s) => this.addShot(s.user, s.assistant));
+    return this
+  }
 
   /**
    * Render a turn block
@@ -263,7 +310,6 @@ class PromptTemplate {
     return this.render().replace("{prompt}", msg)
   }
 
-
   /**
    * Push a turn into history
    *
@@ -274,7 +320,6 @@ class PromptTemplate {
     this.history.push(turn)
     return this
   }
-
 
   private _buildSystemBlock(skip_empty_system: boolean): string {
     let res = "";

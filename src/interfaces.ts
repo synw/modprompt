@@ -150,7 +150,6 @@ interface LmTemplate {
   prefix?: string;
 }
 
-
 /**
  * Image data
  *
@@ -161,7 +160,6 @@ interface ImgData {
   id: number;
   data: string;
 }
-
 
 /**
  * A history turn
