@@ -58,7 +58,8 @@ class PromptTemplate {
    * This function creates a new `PromptTemplate` instance with the same state as the current instance.
    * It is useful when you want to work with a copy of the current template without modifying the original one.
    *
-   * @param {string} id - The id of the new `PromptTemplate`.
+   * @param {string | LmTemplate} template - The id or template instance of the new `PromptTemplate` to make
+   * @param {boolean} keepShots - Keep the shots for the template instance: this will also clone the shots 
    * @returns {PromptTemplate} - A new `PromptTemplate` instance with the same state as the current one.
    *
    * @example
@@ -66,7 +67,7 @@ class PromptTemplate {
    * const clonedTpl = tpl.cloneTo('chatml');
    * console.log(clonedTpl);
    */
-  cloneTo(template: string | LmTemplate, keepShots = true): PromptTemplate {
+  cloneTo(template: string | LmTemplate, keepShots: boolean = true): PromptTemplate {
     const tpl = new PromptTemplate(template);
     if (keepShots) {
       if (this?.shots) {

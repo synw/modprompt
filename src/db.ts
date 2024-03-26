@@ -186,10 +186,11 @@ const templates: Record<string, LmTemplate> = {
   "minichat": {
     "id": "minichat",
     "name": "Minichat",
-    "user": "<s> [|User|] {prompt} </s>",
+    "user": "[|User|] {prompt} </s>",
     "assistant": "[|Assistant|]",
     "stop": ["</s>", "[|User|]"],
     "afterShot": "\n",
+    "prefix": "<s> "
   },
   "phi": {
     "id": "phi",
@@ -208,6 +209,7 @@ const templates: Record<string, LmTemplate> = {
       "schema": "{system}",
       "message": "You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer."
     },
+    "afterShot": "\n",
     "user": "### Instruction:\n{prompt}",
     "assistant": "### Response:",
     "linebreaks": {
@@ -215,7 +217,32 @@ const templates: Record<string, LmTemplate> = {
       "system": 1,
     },
     "stop": ["<|EOT|>", "### Instruction:"]
-  }
+  },
+  "opencodeinterpreter": {
+    "id": "opencodeinterpreter",
+    "name": "Open code interpreter",
+    "user": "<|User|>\n{prompt}",
+    "assistant": "<|Assistant|>",
+    "linebreaks": {
+      "user": 2
+    },
+    "stop": ["<|EOT|>", "<|User|>"]
+  },
+  "cerebrum": {
+    "id": "cerebrum",
+    "name": "Cerebrum",
+    "system": {
+      "schema": "{system}",
+      "message": "A chat between a user and a thinking artificial intelligence assistant. The assistant describes its thought process and gives helpful and detailed answers to the user's questions."
+    },
+    "user": "User: {prompt}",
+    "assistant": "Ai:",
+    "linebreaks": {
+      "user": 1
+    },
+    "prefix": "<s>",
+    "stop": ["</s>"]
+  },
 };
 
 export { templates }

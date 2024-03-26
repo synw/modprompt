@@ -39,4 +39,18 @@ describe('templates', () => {
 [INST] {prompt} [/INST]`;
     expect(ntpl.render()).toBe(newtxt)
   });
+
+  /*it('cloneTo with shots', async () => {
+    const tpl = new PromptTemplate(templates.alpaca);
+    tpl.addShot("What's the weather like?", "It's sunny today!");
+    tpl.addShot("What's the capital of France?", "Paris");
+    const newTpl = tpl.cloneTo("mistral");
+    expect(newTpl.name).toBe("Mistral");
+    expect(newTpl.user).toBe("<s>[INST] {prompt}");
+    expect(newTpl.assistant).toBe("[INST]");
+    expect(newTpl.shots).toEqual([
+      { user: "What's the weather like?", assistant: "It's sunny today!" },
+      { user: "What's the capital of France?", assistant: "Paris" }
+    ]);
+  });*/
 });
