@@ -167,8 +167,8 @@ const templates: Record<string, LmTemplate> = {
     "stop": ["<|end_of_turn|>"]
   },
   "openchat-correct": {
-    "id": "openchat",
-    "name": "OpenChat",
+    "id": "openchat-corect",
+    "name": "OpenChat correct",
     "user": "GPT4 Correct User: {prompt}<|end_of_turn|>",
     "assistant": "GPT4 Correct Assistant:",
     "stop": ["<|end_of_turn|>"]
@@ -243,6 +243,22 @@ const templates: Record<string, LmTemplate> = {
     "prefix": "<s>",
     "stop": ["</s>"]
   },
+  "command-r": {
+    "id": "command-r",
+    "name": "Command-R",
+    "user": "<|START_OF_TURN_TOKEN|><|USER_TOKEN|>{prompt}<|END_OF_TURN_TOKEN|>",
+    "assistant": "<|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>",
+    "prefix": "<BOS_TOKEN>",
+    "stop": [
+      "<|END_OF_TURN_TOKEN|>"
+    ],
+    "linebreaks": {
+      "user": 1,
+    },
+    "system": {
+      "schema": "<|START_OF_TURN_TOKEN|><|SYSTEM_TOKEN|>{system}<|END_OF_TURN_TOKEN|>"
+    }
+  }
 };
 
 export { templates }
