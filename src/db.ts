@@ -167,7 +167,7 @@ const templates: Record<string, LmTemplate> = {
     "stop": ["<|end_of_turn|>"]
   },
   "openchat-correct": {
-    "id": "openchat-corect",
+    "id": "openchat-correct",
     "name": "OpenChat correct",
     "user": "GPT4 Correct User: {prompt}<|end_of_turn|>",
     "assistant": "GPT4 Correct Assistant:",
