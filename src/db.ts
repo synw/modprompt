@@ -132,6 +132,15 @@ const templates: Record<string, LmTemplate> = {
     },
     "afterShot": "\n",
   },
+  "llava": {
+    "id": "llava",
+    "name": "Llava",
+    "user": "USER: {prompt}",
+    "assistant": "ASSISTANT:",
+    "linebreaks": {
+      "user": 1,
+    },
+  },
   "synthia-cot": {
     "id": "synthia-cot",
     "name": "Synthia CoT",
@@ -258,7 +267,23 @@ const templates: Record<string, LmTemplate> = {
     "system": {
       "schema": "<|START_OF_TURN_TOKEN|><|SYSTEM_TOKEN|>{system}<|END_OF_TURN_TOKEN|>"
     }
-  }
+  },
+  "llama3": {
+    "id": "llama3",
+    "name": "Llama 3",
+    "user": "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>",
+    "assistant": "<|start_header_id|>assistant<|end_header_id|>",
+    "prefix": "<|begin_of_text|>",
+    "stop": [
+      "<|end_of_text|>",
+      "<|eot_id|>",
+      "!assistant"
+    ],
+    "afterShot": "<|eot_id|>\n\n",
+    "system": {
+      "schema": "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
+    }
+  },
 };
 
 export { templates }
