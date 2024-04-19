@@ -275,9 +275,8 @@ const templates: Record<string, LmTemplate> = {
     "assistant": "<|start_header_id|>assistant<|end_header_id|>",
     "prefix": "<|begin_of_text|>",
     "stop": [
-      "<|end_of_text|>",
       "<|eot_id|>",
-      "!assistant"
+      "<|end_of_text|>"
     ],
     "afterShot": "<|eot_id|>\n\n",
     "system": {
