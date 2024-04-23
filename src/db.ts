@@ -211,6 +211,17 @@ const templates: Record<string, LmTemplate> = {
     },
     "stop": ["</s>", "Instruct:"]
   },
+  "phi3": {
+    "id": "phi3",
+    "name": "Phi 3",
+    "user": "<|User|>\n{prompt}",
+    "assistant": "<|Assistant|>",
+    "linebreaks": {
+      "user": 1,
+      "assistant": 1,
+    },
+    "stop": ["<|end|>", "<|User|>"]
+  },
   "deepseek": {
     "id": "deepseek",
     "name": "Deepseek",
