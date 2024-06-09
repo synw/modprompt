@@ -121,9 +121,9 @@ const templates: Record<string, LmTemplate> = {
     "id": "zephyr",
     "name": "Zephyr",
     "system": {
-      "schema": "<|system|>\n{system}</s>",
+      "schema": "<|system|>\n{system}<|endoftext|>",
     },
-    "user": "<|user|>\n{prompt}</s>",
+    "user": "<|user|>\n{prompt}<|endoftext|>",
     "assistant": "<|assistant|>",
     "linebreaks": {
       "system": 1,
@@ -131,6 +131,19 @@ const templates: Record<string, LmTemplate> = {
       "assistant": 1,
     },
     "afterShot": "\n",
+    "stop": ["<|endoftext|>"]
+  },
+  "octopus": {
+    "id": "octopus",
+    "name": "Octopus",
+    "system": {
+      "schema": "<|system|>{system}<|end|>",
+      "message": "You are a router. Below is the query from the users, please call the correct function and generate the parameters to call the function."
+    },
+    "user": "<|user|>{prompt}<|end|>",
+    "assistant": "<|assistant|>",
+    "afterShot": "\n",
+    "stop": ["<|end|>"]
   },
   "llava": {
     "id": "llava",
@@ -293,6 +306,20 @@ const templates: Record<string, LmTemplate> = {
     "system": {
       "schema": "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
     }
+  },
+  "codestral": {
+    "id": "codestral",
+    "name": "Codestral",
+    "user": "<s> [INST] {prompt}",
+    "assistant": " [/INST] </s>",
+    "stop": ["</s>"],
+    "afterShot": "\n",
+    "linebreaks": {
+      "system": 2,
+    },
+    "system": {
+      "schema": "<<SYS>>\n{system_prompt}\n<</SYS>>",
+    },
   },
 };
 
