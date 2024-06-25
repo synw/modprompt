@@ -251,6 +251,20 @@ const templates: Record<string, LmTemplate> = {
     },
     "stop": ["<|EOT|>", "### Instruction:"]
   },
+  "deepseek2": {
+    "id": "deepseek2",
+    "name": "Deepseek v2",
+    "system": {
+      "schema": "<｜begin▁of▁sentence｜>{system}",
+    },
+    "user": "User: {prompt}",
+    "assistant": "Assistant:",
+    "linebreaks": {
+      "user": 2,
+      "system": 2,
+    },
+    "stop": ["<｜end▁of▁sentence｜>"]
+  },
   "opencodeinterpreter": {
     "id": "opencodeinterpreter",
     "name": "Open code interpreter",
