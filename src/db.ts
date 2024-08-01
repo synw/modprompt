@@ -335,6 +335,14 @@ const templates: Record<string, LmTemplate> = {
       "schema": "<<SYS>>\n{system_prompt}\n<</SYS>>",
     },
   },
+  "gemma": {
+    "id": "gemma",
+    "name": "Gemma",
+    "user": "<start_of_turn>user\n{prompt}",
+    "assistant": "<end_of_turn>\n<start_of_turn>model",
+    "stop": ["<end_of_turn>"],
+    "afterShot": "\n"
+  },
 };
 
 export { templates }
