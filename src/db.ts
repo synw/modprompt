@@ -263,7 +263,7 @@ const templates: Record<string, LmTemplate> = {
       "user": 2,
       "system": 2,
     },
-    "stop": ["<｜end▁of▁sentence｜>"]
+    "stop": ["<｜end▁of▁sentence｜>", "<｜tool▁calls▁end｜>"]
   },
   "opencodeinterpreter": {
     "id": "opencodeinterpreter",
@@ -311,7 +311,6 @@ const templates: Record<string, LmTemplate> = {
     "name": "Llama 3",
     "user": "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>",
     "assistant": "<|start_header_id|>assistant<|end_header_id|>",
-    "prefix": "<|begin_of_text|>",
     "stop": [
       "<|eot_id|>",
       "<|end_of_text|>"
