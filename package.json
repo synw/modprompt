@@ -1,6 +1,6 @@
 {
   "name": "modprompt",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Prompt templates for language models",
   "license": "MIT",
   "scripts": {
@@ -29,11 +29,11 @@
   "files": [
     "dist"
   ],
-  "module": "./dist/mod.es.mjs",
+  "module": "./dist/main.js",
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/mod.es.mjs"
+      "import": "./dist/main.js"
     }
   },
   "publishConfig": {
