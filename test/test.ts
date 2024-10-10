@@ -1,4 +1,5 @@
-import { templates, PromptTemplate } from "../src/main";
+
+import { templates, PromptTemplate, TurnBlock } from "../src/main";
 
 describe('templates', () => {
   it('base', async () => {
@@ -7,18 +8,20 @@ describe('templates', () => {
     expect(tpl.user).toBe("### Instruction:\n{prompt}");
     expect(tpl.assistant).toBe("### Response:");
   });
+
   it('system', async () => {
     const tpl = new PromptTemplate(templates.alpaca);
-    expect(tpl.system?.schema).toBe("{system}")
-    const sysMsg = "Below is an instruction that describes a task. Write a response that appropriately completes the request."
+    expect(tpl.system?.schema).toBe("{system}");
+    const sysMsg = "Below is an instruction that describes a task. Write a response that appropriately completes the request.";
     expect(tpl.system?.message).toBe(sysMsg);
     tpl.afterSystem("AFTER");
     expect(tpl.render()).toContain(sysMsg + "AFTER");
     tpl.replaceSystem("NEW SYS");
-    const txt = tpl.render()
+    const txt = tpl.render();
     expect(txt).not.toContain(sysMsg);
-    expect(txt.startsWith("NEW SYS")).toBeTruthy()
+    expect(txt.startsWith("NEW SYS")).toBeTruthy();
   });
+
   it('shots', async () => {
     const tpl = new PromptTemplate(templates.human_response);
     tpl.addShot("2+2", "4");
@@ -32,25 +35,51 @@ describe('templates', () => {
 {prompt}
 
 ### RESPONSE:
-`
+`;
     expect(tpl.render()).toBe(txt);
     const ntpl = tpl.cloneTo("mistral");
-    const newtxt = `<s>[INST] 2+2 [/INST]4
+    const newtxt = `[INST] 2+2 [/INST]4
 [INST] {prompt} [/INST]`;
-    expect(ntpl.render()).toBe(newtxt)
+    expect(ntpl.render()).toBe(newtxt);
   });
 
-  /*it('cloneTo with shots', async () => {
+  it('toJson', async () => {
     const tpl = new PromptTemplate(templates.alpaca);
-    tpl.addShot("What's the weather like?", "It's sunny today!");
-    tpl.addShot("What's the capital of France?", "Paris");
-    const newTpl = tpl.cloneTo("mistral");
-    expect(newTpl.name).toBe("Mistral");
-    expect(newTpl.user).toBe("<s>[INST] {prompt}");
-    expect(newTpl.assistant).toBe("[INST]");
-    expect(newTpl.shots).toEqual([
-      { user: "What's the weather like?", assistant: "It's sunny today!" },
-      { user: "What's the capital of France?", assistant: "Paris" }
+    const json = tpl.toJson();
+    expect(json.id).toBe("alpaca");
+    expect(json.name).toBe("Alpaca");
+    expect(json.user).toBe("### Instruction:\n{prompt}");
+    expect(json.assistant).toBe("### Response:");
+  });
+
+  it('prompt', async () => {
+    const tpl = new PromptTemplate(templates.mistral);
+    const prompted = tpl.prompt("list the planets in the solar system");
+    expect(prompted).toBe("[INST] list the planets in the solar system [/INST]");
+  });
+
+  it('pushToHistory', async () => {
+    const tpl = new PromptTemplate(templates.alpaca);
+    tpl.pushToHistory({ user: "What's the weather like?", assistant: "It's sunny today!" });
+    expect(tpl.history).toEqual([
+      { user: "What's the weather like?", assistant: "It's sunny today!" }
     ]);
+  });
+
+  it('renderShot', async () => {
+    const tpl = new PromptTemplate(templates.alpaca);
+    const shot: TurnBlock = { user: "What's the weather like?", assistant: "It's sunny today!" };
+    const rendered = tpl.renderShot(shot);
+    expect(rendered).toContain("### Instruction:\nWhat's the weather like?\n\n### Response:It's sunny today!");
+  });
+
+  /*it('render with different scenarios', async () => {
+    const tpl = new PromptTemplate(templates.mistral);
+    tpl.afterAssistant("( answer in json )");
+    tpl.addShot("2+2", "4");
+    tpl.replacePrompt("fix this invalid json:\n\n```json\n{prompt}\n```");
+    const rendered = tpl.render();
+    expect(rendered).toContain("fix this invalid json:\n\n```json\n2+2\n```");
+    expect(rendered).toContain("4\n\n( answer in json )");
   });*/
 });

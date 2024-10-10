@@ -43,8 +43,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "[INST] {prompt}",
     "assistant": " [/INST]",
     "stop": ["</s>"],
-    "afterShot": "\n",
-    "prefix": "<s>",
+    "afterShot": "\n"
   },
   "orca": {
     "id": "orca",
@@ -323,8 +322,8 @@ const templates: Record<string, LmTemplate> = {
   "codestral": {
     "id": "codestral",
     "name": "Codestral",
-    "user": "<s> [INST] {prompt}",
-    "assistant": " [/INST] </s>",
+    "user": "[INST] {prompt}",
+    "assistant": " [/INST]",
     "stop": ["</s>"],
     "afterShot": "\n",
     "linebreaks": {
