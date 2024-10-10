@@ -8,11 +8,11 @@ export default {
   input: 'src/main.ts',
   output: [
     {
-      file: 'dist/mod.es.mjs',
+      file: 'dist/main.js',
       format: 'esm'
     },
     {
-      file: 'dist/mod.min.js',
+      file: 'dist/main.min.js',
       format: 'iife',
       name: '$tpl',
       plugins: [terser()]
