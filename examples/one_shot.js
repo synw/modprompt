@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 
-import { templates, PromptTemplate } from "modprompt";
+//import { templates, PromptTemplate } from "modprompt";
+import { templates, PromptTemplate } from "../dist/main.js";
 
 //console.log("Available templates:", Object.keys(templates));
+const _prompt = "fix this invalid json:\n\n```json\n{prompt}\n```";
 // load template
-const tpl = new PromptTemplate(templates.alpaca)
-  .afterSystem("You are a javascript specialist")
+const tpl = new PromptTemplate(templates.chatml)
+  .replaceSystem("You are a javascript specialist")
   .afterAssistant(" (answer in valid json)")
-  .replacePrompt("fix this invalid json:\n\n```json\n{prompt}\n```")
+  .replacePrompt(_prompt)
   .addShot(
-    "{'a':1,}",
+    _prompt.replace("{prompt}", "{'a':1,}"),
     '\n\n```json\n{"a":1}\n```\n',
   );
 

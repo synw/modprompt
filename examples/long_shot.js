@@ -37,9 +37,9 @@ Example
 \`\`\``;
 
 const template = new PromptTemplate("alpaca")
-  .afterSystem("You are a Python expert")
+  .replaceSystem("You are a Python expert")
   .replacePrompt(baseprompt)
-  .addShot(shotUser, shotAssistant);
+  .addShot(baseprompt.replace("{prompt}", shotUser), shotAssistant);
 const prompt = `class Dog:
   kingdom = "Animalia"
   species = "Canis lupus"

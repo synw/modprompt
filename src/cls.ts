@@ -1,4 +1,4 @@
-import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn } from "./interfaces";
+import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn } from "./interfaces.js";
 import { templates } from "./db.js";
 
 /**
@@ -245,7 +245,9 @@ class PromptTemplate {
    */
   renderShot(shot: TurnBlock | HistoryTurn): string {
     const buf = [];
+    //console.log("S user", shot.user);
     buf.push(this._buildUserBlock(shot.user));
+    //console.log("BS user", this._buildUserBlock(shot.user))
     let _assistantMsg = shot.assistant;
     if (this.afterShot) {
       _assistantMsg += this.afterShot
@@ -354,7 +356,8 @@ class PromptTemplate {
     }
     if (msg) {
       // this is a shot
-      buf[0] = _userBlock.replace("{prompt}", msg);
+      //buf[0] = _userBlock.replace("{prompt}", msg);
+      buf[0] = this.user.replace("{prompt}", msg);
     }
     return buf.join("")
   }
