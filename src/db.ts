@@ -330,7 +330,7 @@ const templates: Record<string, LmTemplate> = {
       "system": 2,
     },
     "system": {
-      "schema": "<<SYS>>\n{system_prompt}\n<</SYS>>",
+      "schema": "<<SYS>>\n{system}\n<</SYS>>",
     },
   },
   "gemma": {
@@ -341,6 +341,20 @@ const templates: Record<string, LmTemplate> = {
     "stop": ["<end_of_turn>"],
     "afterShot": "\n"
   },
+  "nemotron": {
+    "id": "nemotron",
+    "name": "Nemotron",
+    "user": "<extra_id_1>User\n{prompt}",
+    "assistant": "<extra_id_1>Assistant",
+    "linebreaks": {
+      "system": 2,
+      "user": 1,
+    },
+    "system": {
+      "schema": "<extra_id_0>System\n{system}"
+    },
+    "afterShot": "\n\n"
+  }
 };
 
 export { templates }
