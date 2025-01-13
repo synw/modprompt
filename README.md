@@ -14,8 +14,6 @@ A collection of prompt templates for language models
 
 ```bash
 npm install modprompt
-# or
-yarn add modprompt
 ```
 
 ## Usage

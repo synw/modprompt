@@ -20,10 +20,10 @@ class PromptTemplate {
   afterShot?: string;
   prefix?: string;
   // internal state
-  _extraSystem = "";
-  _extraAssistant = "";
-  _replacePrompt = "";
-  _replaceSystem = "";
+  private _extraSystem = "";
+  private _extraAssistant = "";
+  private _replacePrompt = "";
+  private _replaceSystem = "";
 
   /**
    * Constructs a new `PromptTemplate` instance.
@@ -251,9 +251,9 @@ class PromptTemplate {
     let _assistantMsg = shot.assistant;
     if (this.afterShot) {
       _assistantMsg += this.afterShot
-    } else {
+    } /*else {
       _assistantMsg += "\n\n"
-    }
+    }*/
     buf.push(this._buildAssistantBlock(_assistantMsg));
     return buf.join("")
   }

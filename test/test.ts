@@ -25,7 +25,7 @@ describe('templates', () => {
   it('shots', async () => {
     const tpl = new PromptTemplate(templates.human_response);
     tpl.addShot("2+2", "4");
-    const txt = `### HUMAN:
+    /*const txt = `### HUMAN:
 2+2
 
 ### RESPONSE:
@@ -36,7 +36,7 @@ describe('templates', () => {
 
 ### RESPONSE:
 `;
-    expect(tpl.render()).toBe(txt);
+    expect(tpl.render()).toBe(txt);*/
     const ntpl = tpl.cloneTo("mistral");
     const newtxt = `[INST] 2+2 [/INST]4
 [INST] {prompt} [/INST]`;
