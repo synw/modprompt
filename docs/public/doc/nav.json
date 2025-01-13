@@ -1,0 +1,35 @@
+{
+    "name": "doc",
+    "children": [],
+    "title": "Doc",
+    "content": [
+        {
+            "name": "install",
+            "title": "Install",
+            "filename": "1.install.md",
+            "url": "/install",
+            "docpath": "/1.install.md",
+            "type": "markdown"
+        },
+        {
+            "name": "usage",
+            "title": "Usage",
+            "filename": "2.usage.md",
+            "url": "/usage",
+            "docpath": "/2.usage.md",
+            "type": "markdown"
+        },
+        {
+            "name": "templates",
+            "title": "Templates",
+            "filename": "3.templates.cmp",
+            "url": "/templates",
+            "docpath": "/3.templates.cmp",
+            "type": "component"
+        }
+    ],
+    "docstrings": [],
+    "url": "",
+    "has_md_index": false,
+    "docpath": ""
+}
