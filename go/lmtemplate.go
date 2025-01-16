@@ -1,4 +1,4 @@
-package templates
+package modprompt
 
 import (
 	"encoding/json"

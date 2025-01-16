@@ -1,4 +1,4 @@
-package templates
+package modprompt
 
 type SpacingSlots struct {
 	System    *int `json:"system,omitempty"`

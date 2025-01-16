@@ -1,4 +1,4 @@
-package templates
+package modprompt
 
 var templates = `{
   "alpaca": {

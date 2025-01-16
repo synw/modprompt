@@ -1,21 +1,20 @@
-package main
+package modprompt
 
 import (
 	"fmt"
-	"gotemplate/templates"
 )
 
 func main() {
 	// Initialize a template by name
 	templateName := "chatml"
-	tpl, err := templates.InitTemplate(templateName)
+	tpl, err := InitTemplate(templateName)
 	if err != nil {
 		fmt.Println("Error initializing template:", err)
 		return
 	}
 
 	// Create a PromptTemplate from the LmTemplate
-	promptTemplate := &templates.PromptTemplate{
+	promptTemplate := &PromptTemplate{
 		ID:         tpl.ID,
 		Name:       tpl.Name,
 		User:       tpl.User,
