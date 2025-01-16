@@ -138,17 +138,15 @@ func (tpl *PromptTemplate) _buildUserBlock(msg *string) string {
 func (tpl *PromptTemplate) _buildAssistantBlock(msg *string, isShot bool) string {
 	var buf []string
 	assistantBlock := tpl.Assistant
-	if (tpl._extraAssistant != "") && !isShot {
-		assistantBlock += tpl._extraAssistant
-	}
-	if msg != nil {
-		buf = append(buf, assistantBlock)
-		buf = append(buf, *msg)
-	} else {
-		buf = append(buf, assistantBlock)
-	}
+	buf = append(buf, assistantBlock)
 	if tpl.Linebreaks != nil && tpl.Linebreaks.Assistant != nil {
 		buf = append(buf, strings.Repeat("\n", *tpl.Linebreaks.Assistant))
+	}
+	if msg != nil {
+		buf = append(buf, *msg)
+	}
+	if (tpl._extraAssistant != "") && !isShot {
+		buf = append(buf, tpl._extraAssistant)
 	}
 	return strings.Join(buf, "")
 }
