@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "build_to_gh": "vite build && rm -rf ../docs/* && mv ./dist/* ../docs && cd ../docs && ln -s index.html 404.html",
     "build": "vite build && cd ./dist && ln -s index.html 404.html",
     "preview": "vite build && vite preview",
     "wdoc": "node ./node_modules/@docdundee/docnav/bin/docnav.mjs",
