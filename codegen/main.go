@@ -63,6 +63,6 @@ func main() {
 	//fmt.Println(tsData)
 
 	goData := golang.Gen(content)
-	utils.Write("../go/db.go", goData)
+	utils.Write("./db.go", goData)
 	//fmt.Println(goData)
 }
