@@ -59,7 +59,7 @@ func main() {
 	content := string(jsonData)
 
 	tsData := ts.Gen(content)
-	utils.Write("../ts/src/db.ts", tsData)
+	utils.Write("../src/db.ts", tsData)
 	//fmt.Println(tsData)
 
 	goData := golang.Gen(content)
