@@ -9,19 +9,6 @@ alpaca:
   linebreaks:
     system: 2
     user: 2
-cerebrum:
-  id: cerebrum
-  name: Cerebrum
-  system:
-    schema: "{system}"
-    message: "A chat between a user and a thinking artificial intelligence assistant. The assistant describes its thought process and gives helpful and detailed answers to the user's questions."
-  user: "User: {prompt}"
-  assistant: "Ai:"
-  linebreaks:
-    user: 1
-  prefix: "<s>"
-  stop:
-    - "</s>"
 chatml:
   id: "chatml"
   name: "ChatMl"
@@ -110,13 +97,6 @@ gemma:
   stop:
     - "<end_of_turn>"
   afterShot: "\n"
-guanaco:
-  id: guanaco
-  name: Guanaco
-  user: "### Human: {prompt}"
-  assistant: "### Assistant:"
-  linebreaks:
-    user: 1
 human_response:
   id: human_response
   name: Human response
@@ -172,6 +152,16 @@ mistral:
   name: Mistral
   user: "[INST] {prompt}"
   assistant: " [/INST]"
+  stop:
+    - "</s>"
+  afterShot: "\n"
+mistral-system:
+  id: mistral-system
+  name: Mistral system
+  user: "[INST]{prompt}"
+  assistant: "[/INST]"
+  system:
+    schema: "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
   stop:
     - "</s>"
   afterShot: "\n"
@@ -237,16 +227,6 @@ orca:
   linebreaks:
     system: 2
     user: 2
-phi:
-  id: phi
-  name: Phi
-  user: "Instruct: {prompt}"
-  assistant: "Output:"
-  linebreaks:
-    user: 1
-  stop:
-    - "</s>"
-    - "Instruct:"
 phi3:
   id: phi3
   name: Phi 3
@@ -269,17 +249,6 @@ phi4:
     - "<|im_end|>"
     - "<|im_sep|>"
   afterShot: "<|im_end|>\n"
-synthia-cot:
-  id: synthia-cot
-  name: Synthia CoT
-  system:
-    schema: "SYSTEM: {system}"
-    message: "Elaborate on the topic using a Tree of Thoughts and backtrack when necessary to construct a clear, cohesive Chain of Thought reasoning. Always answer without hesitation."
-  user: "USER: {prompt}"
-  assistant: "ASSISTANT:"
-  linebreaks:
-    system: 1
-    user: 1
 vicuna:
   id: vicuna
   name: Vicuna

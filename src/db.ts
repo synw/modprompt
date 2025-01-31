@@ -17,23 +17,6 @@ const templates: Record<string, LmTemplate> = {
     },
     "user": "### Instruction:\n{prompt}"
   },
-  "cerebrum": {
-    "assistant": "Ai:",
-    "id": "cerebrum",
-    "linebreaks": {
-      "user": 1
-    },
-    "name": "Cerebrum",
-    "prefix": "<s>",
-    "stop": [
-      "</s>"
-    ],
-    "system": {
-      "message": "A chat between a user and a thinking artificial intelligence assistant. The assistant describes its thought process and gives helpful and detailed answers to the user's questions.",
-      "schema": "{system}"
-    },
-    "user": "User: {prompt}"
-  },
   "chatml": {
     "afterShot": " <|im_end|>\n",
     "assistant": "<|im_start|>assistant",
@@ -148,15 +131,6 @@ const templates: Record<string, LmTemplate> = {
     ],
     "user": "<start_of_turn>user\n{prompt}"
   },
-  "guanaco": {
-    "assistant": "### Assistant:",
-    "id": "guanaco",
-    "linebreaks": {
-      "user": 1
-    },
-    "name": "Guanaco",
-    "user": "### Human: {prompt}"
-  },
   "human_response": {
     "assistant": "### RESPONSE:",
     "id": "human_response",
@@ -229,6 +203,19 @@ const templates: Record<string, LmTemplate> = {
       "</s>"
     ],
     "user": "[INST] {prompt}"
+  },
+  "mistral-system": {
+    "afterShot": "\n",
+    "assistant": "[/INST]",
+    "id": "mistral-system",
+    "name": "Mistral system",
+    "stop": [
+      "</s>"
+    ],
+    "system": {
+      "schema": "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
+    },
+    "user": "[INST]{prompt}"
   },
   "nemotron": {
     "afterShot": "\n\n",
@@ -309,19 +296,6 @@ const templates: Record<string, LmTemplate> = {
     },
     "user": "### User:\n{prompt}"
   },
-  "phi": {
-    "assistant": "Output:",
-    "id": "phi",
-    "linebreaks": {
-      "user": 1
-    },
-    "name": "Phi",
-    "stop": [
-      "</s>",
-      "Instruct:"
-    ],
-    "user": "Instruct: {prompt}"
-  },
   "phi3": {
     "afterShot": "<|end|>\n",
     "assistant": "<|assistant|>",
@@ -349,20 +323,6 @@ const templates: Record<string, LmTemplate> = {
       "schema": "<|im_start|>system<|im_sep|>{system}<|im_end|>"
     },
     "user": "<|im_start|>user<|im_sep|>{prompt}<|im_end|>"
-  },
-  "synthia-cot": {
-    "assistant": "ASSISTANT:",
-    "id": "synthia-cot",
-    "linebreaks": {
-      "system": 1,
-      "user": 1
-    },
-    "name": "Synthia CoT",
-    "system": {
-      "message": "Elaborate on the topic using a Tree of Thoughts and backtrack when necessary to construct a clear, cohesive Chain of Thought reasoning. Always answer without hesitation.",
-      "schema": "SYSTEM: {system}"
-    },
-    "user": "USER: {prompt}"
   },
   "vicuna": {
     "assistant": "### ASSISTANT:",
