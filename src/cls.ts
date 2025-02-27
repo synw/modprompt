@@ -267,7 +267,7 @@ class PromptTemplate {
    * const rendered = tpl.render();
    * console.log(rendered);
    */
-  render(skip_empty_system: boolean = false): string {
+  render(skip_empty_system: boolean = true): string {
     const buf = new Array<string>();
     // prefix
     if (this.prefix) {
@@ -309,8 +309,8 @@ class PromptTemplate {
   * const prompted = tpl.prompt("list the planets in the solar system");
   * console.log(prompted);
   */
-  prompt(msg: string): string {
-    return this.render().replace("{prompt}", msg)
+  prompt(msg: string, skip_empty_system: boolean = true): string {
+    return this.render(skip_empty_system).replace("{prompt}", msg)
   }
 
   /**
