@@ -111,6 +111,7 @@ granite:
   linebreaks:
     user: 1
     system: 1
+  afterShot: "<|end_of_text|>\n"
 granite-think:
   id: granite-think
   name: Granite think
@@ -125,6 +126,7 @@ granite-think:
   linebreaks:
     user: 1
     system: 1
+  afterShot: "<|end_of_text|>\n"
 granite-tools:
   id: granite-tools
   name: Granite tools
@@ -139,11 +141,12 @@ granite-tools:
   tools:
     def: "<|start_of_role|>tools<|end_of_role|>{tools}<|end_of_text|>"
     call: "<|tool_call|>"
-    response: "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>"
+    response: "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>\n"
   linebreaks:
     user: 1
     system: 1
     tools: 1
+  afterShot: "<|end_of_text|>\n"
 llama:
   id: llama
   name: Llama

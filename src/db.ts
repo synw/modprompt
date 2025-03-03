@@ -132,6 +132,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<start_of_turn>user\n{prompt}"
   },
   "granite": {
+    "afterShot": "<|end_of_text|>\n",
     "assistant": "<|start_of_role|>assistant<|end_of_role|>",
     "id": "granite",
     "linebreaks": {
@@ -150,6 +151,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
   },
   "granite-think": {
+    "afterShot": "<|end_of_text|>\n",
     "assistant": "<|start_of_role|>assistant<|end_of_role|>",
     "id": "granite-think",
     "linebreaks": {
@@ -168,6 +170,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
   },
   "granite-tools": {
+    "afterShot": "<|end_of_text|>\n",
     "assistant": "<|start_of_role|>assistant<|end_of_role|>",
     "id": "granite-tools",
     "linebreaks": {
@@ -187,7 +190,7 @@ const templates: Record<string, LmTemplate> = {
     "tools": {
       "call": "<|tool_call|>",
       "def": "<|start_of_role|>tools<|end_of_role|>{tools}<|end_of_text|>",
-      "response": "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>"
+      "response": "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>\n"
     },
     "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
   },

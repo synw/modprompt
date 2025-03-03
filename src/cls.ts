@@ -13,7 +13,7 @@ class PromptTemplate {
   user: string;
   assistant: string;
   history: Array<HistoryTurn> = [];
-  toolsDef: LmToolsDef;
+  toolsDef: LmToolsDef | null = null;
   tools: Array<Record<string, any>> = [];
   system?: PromptBlock;
   shots?: Array<TurnBlock>;
@@ -52,7 +52,9 @@ class PromptTemplate {
     this.linebreaks = tpl.linebreaks;
     this.afterShot = tpl.afterShot;
     this.prefix = tpl.prefix;
-    this.toolsDef = tpl?.tools ?? { def: "", call: "", response: "" };
+    if (tpl?.tools) {
+      this.toolsDef = tpl.tools
+    }
   }
 
   addTool(tool: Record<string, any>): PromptTemplate {
@@ -263,6 +265,9 @@ class PromptTemplate {
       _assistantMsg += "\n\n"
     }*/
     buf.push(this._buildAssistantBlock(_assistantMsg));
+    if (shot?.tool) {
+      buf.push(this._buildToolResponse(shot.tool));
+    }
     return buf.join("")
   }
 
@@ -289,27 +294,37 @@ class PromptTemplate {
         buf.push("\n".repeat(this.linebreaks.system))
       }
     }
-    // tools
-    const _toolsBlock = this._buildToolsBlock();
-    if (_toolsBlock.length > 0) {
-      buf.push(_toolsBlock);
-      if (this?.linebreaks?.tools) {
-        buf.push("\n".repeat(this.linebreaks.tools))
+    // tools if any
+    if (this.toolsDef) {
+      const _toolsBlock = this._buildToolsBlock();
+      if (_toolsBlock.length > 0) {
+        buf.push(_toolsBlock);
+        if (this?.linebreaks?.tools) {
+          buf.push("\n".repeat(this.linebreaks.tools))
+        }
       }
     }
-    // shots
+    // shots if any
     if (this?.shots) {
       for (const shot of this.shots) {
         buf.push(this.renderShot(shot));
       }
     }
     // history
-    for (const turn of this.history) {
-      buf.push(this.renderShot(turn));
+    let isToolResponse = false;
+    if (this.history.length > 0) {
+      for (const turn of this.history) {
+        buf.push(this.renderShot(turn));
+      }
+      if (this.history[this.history.length - 1]?.tool) {
+        isToolResponse = true
+      }
     }
-    // user block
-    buf.push(this._buildUserBlock());
-    // assistant block
+    if (!isToolResponse) {
+      // user block
+      buf.push(this._buildUserBlock());
+      // assistant block      
+    }
     buf.push(this._buildAssistantBlock());
     //console.log(buf)
     return buf.join("");
@@ -359,7 +374,17 @@ class PromptTemplate {
     return res
   }
 
+  private _buildToolResponse(txt: string): string {
+    if (!this.toolsDef) {
+      throw new Error("No tools def in template to build tool response");
+    }
+    return this.toolsDef.response.replace("{tools_response}", txt)
+  }
+
   private _buildToolsBlock(): string {
+    if (!this.toolsDef) {
+      throw new Error(`Can not build tools block: no tools definition found in template`)
+    }
     let toolsBlock = "";
     if (this.tools.length == 0) {
       return ""

@@ -73,6 +73,7 @@ interface TurnBlock {
    * The corresponding response from the assistant.
    */
   assistant: string;
+  tool?: string;
 }
 
 interface LmToolsDef {
@@ -177,6 +178,7 @@ interface ImgData {
 interface HistoryTurn {
   user: string;
   assistant: string;
+  tool?: string;
   images?: Array<ImgData>;
 }
 
