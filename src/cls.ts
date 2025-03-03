@@ -1,4 +1,4 @@
-import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn } from "./interfaces.js";
+import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn, LmToolsDef } from "./interfaces.js";
 import { templates } from "./db.js";
 
 /**
@@ -13,6 +13,8 @@ class PromptTemplate {
   user: string;
   assistant: string;
   history: Array<HistoryTurn> = [];
+  toolsDef: LmToolsDef;
+  tools: Array<Record<string, any>> = [];
   system?: PromptBlock;
   shots?: Array<TurnBlock>;
   stop?: Array<string>;
@@ -50,6 +52,12 @@ class PromptTemplate {
     this.linebreaks = tpl.linebreaks;
     this.afterShot = tpl.afterShot;
     this.prefix = tpl.prefix;
+    this.toolsDef = tpl?.tools ?? { def: "", call: "", response: "" };
+  }
+
+  addTool(tool: Record<string, any>): PromptTemplate {
+    this.tools.push(tool);
+    return this
   }
 
   /**
@@ -281,6 +289,14 @@ class PromptTemplate {
         buf.push("\n".repeat(this.linebreaks.system))
       }
     }
+    // tools
+    const _toolsBlock = this._buildToolsBlock();
+    if (_toolsBlock.length > 0) {
+      buf.push(_toolsBlock);
+      if (this?.linebreaks?.tools) {
+        buf.push("\n".repeat(this.linebreaks.tools))
+      }
+    }
     // shots
     if (this?.shots) {
       for (const shot of this.shots) {
@@ -341,6 +357,16 @@ class PromptTemplate {
       res = this.system.schema;
     }
     return res
+  }
+
+  private _buildToolsBlock(): string {
+    let toolsBlock = "";
+    if (this.tools.length == 0) {
+      return ""
+    }
+    const _t = JSON.stringify(this.tools);
+    toolsBlock += this.toolsDef.def.replace("{tools}", _t);
+    return toolsBlock
   }
 
   private _buildUserBlock(msg?: string): string {

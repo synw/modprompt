@@ -23,18 +23,18 @@ describe('templates', () => {
   });
 
   it('shots', async () => {
-    const tpl = new PromptTemplate(templates.human_response);
+    const tpl = new PromptTemplate(templates.vicuna);
     tpl.addShot("2+2", "4");
-    /*const txt = `### HUMAN:
+    /*const txt = `USER:
 2+2
 
-### RESPONSE:
+### ASSISTANT:
 4
 
-### HUMAN:
+USER:
 {prompt}
 
-### RESPONSE:
+### ASSISTANT:
 `;
     expect(tpl.render()).toBe(txt);*/
     const ntpl = tpl.cloneTo("mistral");

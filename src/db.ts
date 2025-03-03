@@ -131,15 +131,65 @@ const templates: Record<string, LmTemplate> = {
     ],
     "user": "<start_of_turn>user\n{prompt}"
   },
-  "human_response": {
-    "assistant": "### RESPONSE:",
-    "id": "human_response",
+  "granite": {
+    "assistant": "<|start_of_role|>assistant<|end_of_role|>",
+    "id": "granite",
     "linebreaks": {
-      "assistant": 1,
-      "user": 2
+      "system": 1,
+      "user": 1
     },
-    "name": "Human response",
-    "user": "### HUMAN:\n{prompt}"
+    "name": "Granite",
+    "stop": [
+      "<|end_of_text|>",
+      "<|start_of_role|>"
+    ],
+    "system": {
+      "message": "You are Granite, developed by IBM. You are a helpful AI assistant.",
+      "schema": "<|start_of_role|>system<|end_of_role|>{system}<|end_of_text|>"
+    },
+    "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
+  },
+  "granite-think": {
+    "assistant": "<|start_of_role|>assistant<|end_of_role|>",
+    "id": "granite-think",
+    "linebreaks": {
+      "system": 1,
+      "user": 1
+    },
+    "name": "Granite think",
+    "stop": [
+      "<|end_of_text|>",
+      "<|start_of_role|>"
+    ],
+    "system": {
+      "message": "You are Granite, developed by IBM. You are a helpful AI assistant. Respond to every user query in a comprehensive and detailed way. You can write down your thoughts and reasoning process before responding. In the thought process, engage in a comprehensive cycle of analysis, summarization, exploration, reassessment, reflection, backtracing, and iteration to develop well-considered thinking process. In the response section, based on various attempts, explorations, and reflections from the thoughts section, systematically present the final solution that you deem correct. The response should summarize the thought process. Write your thoughts after 'Here is my thought process:' and write your response after 'Here is my response:' for each user query.",
+      "schema": "<|start_of_role|>system<|end_of_role|>{system}<|end_of_text|>"
+    },
+    "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
+  },
+  "granite-tools": {
+    "assistant": "<|start_of_role|>assistant<|end_of_role|>",
+    "id": "granite-tools",
+    "linebreaks": {
+      "system": 1,
+      "tools": 1,
+      "user": 1
+    },
+    "name": "Granite tools",
+    "stop": [
+      "<|end_of_text|>",
+      "<|start_of_role|>"
+    ],
+    "system": {
+      "message": "You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.",
+      "schema": "<|start_of_role|>system<|end_of_role|>{system}<|end_of_text|>"
+    },
+    "tools": {
+      "call": "<|tool_call|>",
+      "def": "<|start_of_role|>tools<|end_of_role|>{tools}<|end_of_text|>",
+      "response": "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>"
+    },
+    "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
   },
   "llama": {
     "assistant": " [/INST] ",

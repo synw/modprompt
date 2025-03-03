@@ -26,6 +26,7 @@ interface SpacingSlots {
    * Number of line breaks to be applied after the assistant message.
    */
   assistant?: number;
+  tools?: number;
 }
 
 /**
@@ -72,6 +73,12 @@ interface TurnBlock {
    * The corresponding response from the assistant.
    */
   assistant: string;
+}
+
+interface LmToolsDef {
+  def: string;
+  call: string;
+  response: string;
 }
 
 /**
@@ -126,7 +133,7 @@ interface LmTemplate {
    * Useful for simulating multi-turn interactions.
    */
   shots?: Array<TurnBlock>;
-
+  tools?: LmToolsDef;
   /**
    * Optional array of strings that signal the end of a conversation.
    * 
@@ -173,4 +180,4 @@ interface HistoryTurn {
   images?: Array<ImgData>;
 }
 
-export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate, HistoryTurn, ImgData }
+export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate, HistoryTurn, ImgData, LmToolsDef }
