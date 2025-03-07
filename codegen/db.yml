@@ -23,6 +23,25 @@ chatml:
   stop:
     - "<|im_end|>"
   afterShot: " <|im_end|>\n"
+chatml-tools:
+  id: "chatml"
+  name: "ChatMl"
+  system:
+    schema: "<|im_start|>system\n{system}<|im_end|>"
+    message: 'You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{"name": <function-name>, "arguments": <args-json-object>}\n</tool_call>'
+  user: "<|im_start|>user\n{prompt}<|im_end|>"
+  assistant: "<|im_start|>assistant"
+  linebreaks:
+    system: 1
+    user: 1
+    assistant: 1
+  stop:
+    - "<|im_end|>"
+  afterShot: " <|im_end|>\n"
+  tools:
+    def: "{system}"
+    call: "<tool_call>\n{tool}\n</tool_call>"
+    response: "<|im_start|>user\n<tool_response>\n{tools_response}\n</tool_response><|im_end|>\n"
 codestral:
   id: codestral
   name: Codestral

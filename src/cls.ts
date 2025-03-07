@@ -286,8 +286,9 @@ class PromptTemplate {
     if (this.prefix) {
       buf.push(this.prefix)
     }
+    const hasSystemTools = this?.toolsDef?.def == "{system}";
     // system prompt if any
-    const _systemBlock = this._buildSystemBlock(skip_empty_system);
+    const _systemBlock = this._buildSystemBlock(skip_empty_system, hasSystemTools);
     if (_systemBlock.length > 0) {
       buf.push(_systemBlock);
       if (this?.linebreaks?.system) {
@@ -295,7 +296,7 @@ class PromptTemplate {
       }
     }
     // tools if any
-    if (this.toolsDef) {
+    if (this.toolsDef && !hasSystemTools) {
       const _toolsBlock = this._buildToolsBlock();
       if (_toolsBlock.length > 0) {
         buf.push(_toolsBlock);
@@ -355,7 +356,7 @@ class PromptTemplate {
     return this
   }
 
-  private _buildSystemBlock(skip_empty_system: boolean): string {
+  private _buildSystemBlock(skip_empty_system: boolean, systemTools = false): string {
     let res = "";
     if (!this?.system) {
       return ""
@@ -371,6 +372,9 @@ class PromptTemplate {
     } else if (!skip_empty_system) {
       res = this.system.schema;
     }
+    if (systemTools) {
+      res = res.replace("{tools}", this._buildToolsBlock(true))
+    }
     return res
   }
 
@@ -381,7 +385,7 @@ class PromptTemplate {
     return this.toolsDef.response.replace("{tools_response}", txt)
   }
 
-  private _buildToolsBlock(): string {
+  private _buildToolsBlock(raw = false): string {
     if (!this.toolsDef) {
       throw new Error(`Can not build tools block: no tools definition found in template`)
     }
@@ -390,6 +394,9 @@ class PromptTemplate {
       return ""
     }
     const _t = JSON.stringify(this.tools);
+    if (raw) {
+      return _t
+    }
     toolsBlock += this.toolsDef.def.replace("{tools}", _t);
     return toolsBlock
   }

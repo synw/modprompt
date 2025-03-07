@@ -2,6 +2,8 @@
 import { Lm } from "@locallm/api";
 import { PromptTemplate } from "../dist/main.js";
 
+// ollama pull qwen2.5:3b-instruct-q8_0
+
 const tool1 = {
     "name": "get_current_weather",
     "description": "Get the current weather",
@@ -12,9 +14,12 @@ const tool1 = {
     }
 };
 
-const template = new PromptTemplate("granite-tools").addTool(tool1);
-const model = "granite3.2:2b-instruct-q8_0";
+//const template = new PromptTemplate("granite-tools").addTool(tool1);
+//const model = "granite3.2:2b-instruct-q8_0";
+const template = new PromptTemplate("chatml-tools").addTool(tool1);
+const model = "qwen2.5:3b-instruct-q8_0";
 const prompt = "What is the current weather in London?";
+const toolResponse = '{“temp”: 20.5, “unit”: “C”}';
 
 async function main() {
     const lm = new Lm({
@@ -42,7 +47,7 @@ async function main() {
     template.pushToHistory({
         user: prompt,
         assistant: res.text,
-        tool: '{“temp”: 20.5, “unit”: “C”}'
+        tool: toolResponse,
     });
     console.log("\n----------- Turn 2 prompt:");
     const _nextPrompt = template.render();
