@@ -212,7 +212,7 @@ const templates: Record<string, LmTemplate> = {
       "schema": "<|start_of_role|>system<|end_of_role|>{system}<|end_of_text|>"
     },
     "tools": {
-      "call": "<|tool_call|>",
+      "call": "<|tool_call|>{tool}",
       "def": "<|start_of_role|>tools<|end_of_role|>{tools}<|end_of_text|>",
       "response": "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>\n"
     },
