@@ -16,6 +16,8 @@ const tool1 = {
 
 //const template = new PromptTemplate("granite-tools").addTool(tool1);
 //const model = "granite3.2:2b-instruct-q8_0";
+//const template = new PromptTemplate("mistral-system-tools").addTool(tool1);
+//const model = "mistral-small:latest";
 const template = new PromptTemplate("chatml-tools").addTool(tool1);
 const model = "qwen2.5:3b-instruct-q8_0";
 const prompt = "What is the current weather in London?";

@@ -1,6 +1,6 @@
 {
   "name": "modprompt",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "description": "Prompt templates for language models",
   "license": "MIT",
   "scripts": {

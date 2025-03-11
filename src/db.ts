@@ -294,6 +294,24 @@ const templates: Record<string, LmTemplate> = {
     },
     "user": "[INST]{prompt}"
   },
+  "mistral-system-tools": {
+    "afterShot": "\n",
+    "assistant": "",
+    "id": "mistral-system",
+    "name": "Mistral system",
+    "stop": [
+      "</s>"
+    ],
+    "system": {
+      "schema": "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
+    },
+    "tools": {
+      "call": "[TOOL_CALLS] [{tool}]</s>",
+      "def": "[AVAILABLE_TOOLS]{tools}[/AVAILABLE_TOOLS]",
+      "response": "[TOOL_RESULTS]{tools_response}[/TOOL_RESULTS]"
+    },
+    "user": "[INST]{prompt}[/INST]"
+  },
   "nemotron": {
     "afterShot": "\n\n",
     "assistant": "<extra_id_1>Assistant",
@@ -314,20 +332,6 @@ const templates: Record<string, LmTemplate> = {
     "name": "No template",
     "user": "{prompt}"
   },
-  "octopus": {
-    "afterShot": "\n",
-    "assistant": "<|assistant|>",
-    "id": "octopus",
-    "name": "Octopus",
-    "stop": [
-      "<|end|>"
-    ],
-    "system": {
-      "message": "You are a router. Below is the query from the users, please call the correct function and generate the parameters to call the function.",
-      "schema": "<|system|>{system}<|end|>"
-    },
-    "user": "<|user|>{prompt}<|end|>"
-  },
   "openchat": {
     "assistant": "GPT4 Assistant:",
     "id": "openchat",
@@ -345,19 +349,6 @@ const templates: Record<string, LmTemplate> = {
       "<|end_of_turn|>"
     ],
     "user": "GPT4 Correct User: {prompt}<|end_of_turn|>"
-  },
-  "opencodeinterpreter": {
-    "assistant": "<|Assistant|>",
-    "id": "opencodeinterpreter",
-    "linebreaks": {
-      "user": 2
-    },
-    "name": "Open code interpreter",
-    "stop": [
-      "<|EOT|>",
-      "<|User|>"
-    ],
-    "user": "<|User|>\n{prompt}"
   },
   "orca": {
     "assistant": "### Response:",

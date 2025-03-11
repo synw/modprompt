@@ -226,6 +226,20 @@ mistral-system:
   stop:
     - "</s>"
   afterShot: "\n"
+mistral-system-tools:
+  id: mistral-system
+  name: Mistral system
+  user: "[INST]{prompt}[/INST]"
+  assistant: ""
+  system:
+    schema: "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
+  stop:
+    - "</s>"
+  afterShot: "\n"
+  tools:
+    def: "[AVAILABLE_TOOLS]{tools}[/AVAILABLE_TOOLS]"
+    call: "[TOOL_CALLS] [{tool}]</s>"
+    response: "[TOOL_RESULTS]{tools_response}[/TOOL_RESULTS]"
 nemotron:
   id: nemotron
   name: Nemotron
@@ -242,17 +256,6 @@ none:
   name: No template
   user: "{prompt}"
   assistant: ""
-octopus:
-  id: octopus
-  name: Octopus
-  system:
-    schema: "<|system|>{system}<|end|>"
-    message: "You are a router. Below is the query from the users, please call the correct function and generate the parameters to call the function."
-  user: "<|user|>{prompt}<|end|>"
-  assistant: "<|assistant|>"
-  afterShot: "\n"
-  stop:
-    - "<|end|>"
 openchat:
   id: openchat
   name: OpenChat
@@ -267,16 +270,6 @@ openchat-correct:
   assistant: "GPT4 Correct Assistant:"
   stop:
     - "<|end_of_turn|>"
-opencodeinterpreter:
-  id: opencodeinterpreter
-  name: Open code interpreter
-  user: "<|User|>\n{prompt}"
-  assistant: "<|Assistant|>"
-  linebreaks:
-    user: 2
-  stop:
-    - "<|EOT|>"
-    - "<|User|>"
 orca:
   id: orca
   name: Orca
