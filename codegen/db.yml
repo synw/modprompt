@@ -303,6 +303,15 @@ phi4:
     - "<|im_end|>"
     - "<|im_sep|>"
   afterShot: "<|im_end|>\n"
+reka:
+  id: reka
+  name: Reka
+  user: "human: {prompt} <sep> "
+  assistant: "assistant:"
+  stop:
+    - "<sep>"
+    - "<|endoftext|>
+  afterShot: " <sep> "
 vicuna:
   id: vicuna
   name: Vicuna

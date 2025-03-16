@@ -182,4 +182,22 @@ interface HistoryTurn {
   images?: Array<ImgData>;
 }
 
-export { SpacingSlots, PromptBlock, TurnBlock, LmTemplate, HistoryTurn, ImgData, LmToolsDef }
+interface ToolSpec {
+  description: string;
+  args: {
+    [key: string]: {
+      description: string;
+    };
+  };
+}
+
+export {
+  SpacingSlots,
+  PromptBlock,
+  TurnBlock,
+  LmTemplate,
+  HistoryTurn,
+  ImgData,
+  LmToolsDef,
+  ToolSpec,
+}

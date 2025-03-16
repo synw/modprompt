@@ -1,4 +1,4 @@
-import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn, LmToolsDef } from "./interfaces.js";
+import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn, LmToolsDef, ToolSpec } from "./interfaces.js";
 import { templates } from "./db.js";
 
 /**
@@ -14,7 +14,7 @@ class PromptTemplate {
   assistant: string;
   history: Array<HistoryTurn> = [];
   toolsDef: LmToolsDef | null = null;
-  tools: Array<Record<string, any>> = [];
+  tools: Array<ToolSpec> = [];
   system?: PromptBlock;
   shots?: Array<TurnBlock>;
   stop?: Array<string>;
@@ -57,9 +57,12 @@ class PromptTemplate {
     }
   }
 
-  addTool(tool: Record<string, any>): PromptTemplate {
+  addTool(tool: ToolSpec): PromptTemplate {
+    if (!this?.toolsDef) {
+      throw new Error("This template does not support tools");
+    }
     this.tools.push(tool);
-    return this
+    return this;
   }
 
   /**
@@ -214,16 +217,13 @@ class PromptTemplate {
    * @example
    * tpl.addShot('Is it raining?', 'No, it is sunny.');
    */
-  addShot(user: string, assistant: string): PromptTemplate {
-    if (!this?.shots) {
-      this.shots = [];
+  addShot(user: string, assistant: string, tool?: string): PromptTemplate {
+    if (tool && !this.toolsDef) {
+      throw new Error("This template does not support tools");
     }
-    let _assistantMsg = assistant;
-    this.shots.push({
-      user: user,
-      assistant: _assistantMsg,
-    });
-    return this
+    if (!this.shots) { this.shots = [] };
+    this.shots.push({ user, assistant, tool });
+    return this;
   }
 
   /**
