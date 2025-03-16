@@ -91,6 +91,26 @@ const templates: Record<string, LmTemplate> = {
     },
     "user": "<|START_OF_TURN_TOKEN|><|USER_TOKEN|>{prompt}<|END_OF_TURN_TOKEN|>"
   },
+  "deephermes": {
+    "afterShot": "<|eot_id|>\n\n",
+    "assistant": "<|start_header_id|>assistant<|end_header_id|>",
+    "id": "deephermes",
+    "name": "Deephermes",
+    "stop": [
+      "<|eot_id|>",
+      "<|end_of_text|>"
+    ],
+    "system": {
+      "message": "You are a function calling AI model. You are provided with function signatures within <tools></tools> XML tags. You may call one or more functions to assist with the user query. Don't make assumptions about what values to plug into functions. Here are the available tools: <tools> {tools} </tools>. For each function call return a json object with function name and arguments within <tool_call></tool_call> XML tags as follows:\n<tool_call>\n{\"arguments\": <args-dict>, \"name\": <function-name>}\n</tool_call>",
+      "schema": "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
+    },
+    "tools": {
+      "call": "<tool_call>\n{tool}\n</tool_call>",
+      "def": "{system}",
+      "response": "<|start_header_id|>user<|end_header_id|>\n<tool_response>\n{tools_response}\n</tool_response><|eot_id|>\n"
+    },
+    "user": "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>"
+  },
   "deepseek": {
     "afterShot": "\n",
     "assistant": "### Response:",
@@ -250,6 +270,21 @@ const templates: Record<string, LmTemplate> = {
     },
     "user": "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>"
   },
+  "llama3-think": {
+    "afterShot": "<|eot_id|>\n\n",
+    "assistant": "<|start_header_id|>assistant<|end_header_id|>",
+    "id": "llama3",
+    "name": "Llama 3",
+    "stop": [
+      "<|eot_id|>",
+      "<|end_of_text|>"
+    ],
+    "system": {
+      "message": "You are a deep thinking AI, you may use extremely long chains of thought to deeply consider the problem and deliberate with yourself via systematic reasoning processes to help come to a correct solution prior to answering. You should enclose your thoughts and internal monologue inside <think> </think> tags, and then provide your solution or response to the problem.",
+      "schema": "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
+    },
+    "user": "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>"
+  },
   "llava": {
     "assistant": "ASSISTANT:",
     "id": "llava",
@@ -391,6 +426,17 @@ const templates: Record<string, LmTemplate> = {
       "schema": "<|im_start|>system<|im_sep|>{system}<|im_end|>"
     },
     "user": "<|im_start|>user<|im_sep|>{prompt}<|im_end|>"
+  },
+  "reka": {
+    "afterShot": " <sep> ",
+    "assistant": "assistant:",
+    "id": "reka",
+    "name": "Reka",
+    "stop": [
+      "<sep>",
+      "<|endoftext|>"
+    ],
+    "user": "human: {prompt} <sep> "
   },
   "vicuna": {
     "assistant": "### ASSISTANT:",

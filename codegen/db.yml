@@ -191,6 +191,34 @@ llama3:
   afterShot: "<|eot_id|>\n\n"
   system:
     schema: "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
+llama3-think:
+  id: llama3
+  name: Llama 3
+  user: "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>"
+  assistant: "<|start_header_id|>assistant<|end_header_id|>"
+  stop:
+    - "<|eot_id|>"
+    - "<|end_of_text|>"
+  afterShot: "<|eot_id|>\n\n"
+  system:
+    schema: "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
+    message: "You are a deep thinking AI, you may use extremely long chains of thought to deeply consider the problem and deliberate with yourself via systematic reasoning processes to help come to a correct solution prior to answering. You should enclose your thoughts and internal monologue inside <think> </think> tags, and then provide your solution or response to the problem."
+deephermes:
+  id: deephermes
+  name: Deephermes
+  user: "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>"
+  assistant: "<|start_header_id|>assistant<|end_header_id|>"
+  stop:
+    - "<|eot_id|>"
+    - "<|end_of_text|>"
+  afterShot: "<|eot_id|>\n\n"
+  system:
+    schema: "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
+    message: "You are a function calling AI model. You are provided with function signatures within <tools></tools> XML tags. You may call one or more functions to assist with the user query. Don't make assumptions about what values to plug into functions. Here are the available tools: <tools> {tools} </tools>. For each function call return a json object with function name and arguments within <tool_call></tool_call> XML tags as follows:\n<tool_call>\n{\"arguments\": <args-dict>, \"name\": <function-name>}\n</tool_call>"
+  tools:
+    def: "{system}"
+    call: "<tool_call>\n{tool}\n</tool_call>"
+    response: "<|start_header_id|>user<|end_header_id|>\n<tool_response>\n{tools_response}\n</tool_response><|eot_id|>\n"
 llava:
   id: llava
   name: Llava
@@ -310,7 +338,7 @@ reka:
   assistant: "assistant:"
   stop:
     - "<sep>"
-    - "<|endoftext|>
+    - "<|endoftext|>"
   afterShot: " <sep> "
 vicuna:
   id: vicuna
