@@ -26,6 +26,8 @@ class PromptTemplate {
   private _extraAssistant = "";
   private _replacePrompt = "";
   private _replaceSystem = "";
+  private _toolCallStart: string = "";
+  private _toolCallEnd: string | null = null;
 
   /**
    * Constructs a new `PromptTemplate` instance.
@@ -53,8 +55,23 @@ class PromptTemplate {
     this.afterShot = tpl.afterShot;
     this.prefix = tpl.prefix;
     if (tpl?.tools) {
-      this.toolsDef = tpl.tools
+      this.toolsDef = tpl.tools;
+      const toolCallStartEnd = this.toolsDef?.call.split("{tools}");
+      if (!toolCallStartEnd) {
+        throw new Error(`Tool definition malformed in template ${this.name}`)
+      }
+      if (toolCallStartEnd.length == 0) {
+        throw new Error(`Tool definition malformed in template ${this.name}: no start tool call definition`)
+      }
+      this._toolCallStart = toolCallStartEnd[0];
+      if (toolCallStartEnd.length > 1) {
+        this._toolCallEnd = toolCallStartEnd[1]
+      }
     }
+  }
+
+  get hasTools(): boolean {
+    return this.tools.length > 0
   }
 
   addTool(tool: ToolSpec): PromptTemplate {
@@ -63,6 +80,41 @@ class PromptTemplate {
     }
     this.tools.push(tool);
     return this;
+  }
+
+  processAnswer(answer: string): { isToolCall: boolean; toolsCall: Array<Record<string, any>>; error?: string } {
+    if (!this.hasTools) {
+      return { isToolCall: false, toolsCall: [] };
+    }
+    let isToolCall = false;
+    let toolsCall = new Array<Record<string, any>>();
+    if (answer.startsWith(this._toolCallStart)) {
+      isToolCall = true;
+      const tcs = this._parseToolCallString(answer);
+      let errMsg = "";
+      try {
+        const tc = JSON.parse(tcs);
+        if (!Array.isArray(tc)) {
+          errMsg = `error parsing tool call response from model: the response object is not an Array:\n${answer}`;
+          console.log(errMsg)
+        }
+        toolsCall = tc;
+      } catch (e) {
+        errMsg = `error parsing tool call response from model:\n${answer}`;
+        console.log(errMsg)
+      }
+      if (errMsg) {
+        return { isToolCall: false, toolsCall: [], error: errMsg };
+      }
+    }
+    return { isToolCall: isToolCall, toolsCall: toolsCall };
+  }
+
+  encodeToolResponse(response: any): string {
+    if (!this.toolsDef) {
+      throw new Error("can not encode tool response: the template has no tools definition")
+    }
+    return this.toolsDef.response.replace("{tools_response}", `${response}`)
   }
 
   /**
@@ -448,6 +500,14 @@ class PromptTemplate {
     } catch (err) {
       throw new Error(`Error loading template ${name}: ${err}`)
     }
+  }
+
+  private _parseToolCallString(raw: string): string {
+    let call = raw.replace(this._toolCallStart, "");
+    if (this._toolCallEnd) {
+      call = call.replace(this._toolCallEnd, "");
+    }
+    return call
   }
 }
 

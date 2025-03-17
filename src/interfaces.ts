@@ -183,8 +183,9 @@ interface HistoryTurn {
 }
 
 interface ToolSpec {
+  name: string;
   description: string;
-  args: {
+  arguments: {
     [key: string]: {
       description: string;
     };

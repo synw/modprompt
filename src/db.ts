@@ -105,7 +105,7 @@ const templates: Record<string, LmTemplate> = {
       "schema": "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
     },
     "tools": {
-      "call": "<tool_call>\n{tool}\n</tool_call>",
+      "call": "<tool_call>\n{tools}\n</tool_call>",
       "def": "{system}",
       "response": "<|start_header_id|>user<|end_header_id|>\n<tool_response>\n{tools_response}\n</tool_response><|eot_id|>\n"
     },
@@ -232,7 +232,7 @@ const templates: Record<string, LmTemplate> = {
       "schema": "<|start_of_role|>system<|end_of_role|>{system}<|end_of_text|>"
     },
     "tools": {
-      "call": "<|tool_call|>{tool}",
+      "call": "<tool_call>{tools}",
       "def": "<|start_of_role|>tools<|end_of_role|>{tools}<|end_of_text|>",
       "response": "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>\n"
     },
@@ -341,7 +341,7 @@ const templates: Record<string, LmTemplate> = {
       "schema": "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
     },
     "tools": {
-      "call": "[TOOL_CALLS] [{tool}]</s>",
+      "call": "[TOOL_CALLS] {tools}</s>",
       "def": "[AVAILABLE_TOOLS]{tools}[/AVAILABLE_TOOLS]",
       "response": "[TOOL_RESULTS]{tools_response}[/TOOL_RESULTS]"
     },

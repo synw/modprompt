@@ -40,7 +40,7 @@ chatml-tools:
   afterShot: " <|im_end|>\n"
   tools:
     def: "{system}"
-    call: "<tool_call>\n{tool}\n</tool_call>"
+    call: "<tool_call>\n{tools}\n</tool_call>"
     response: "<|im_start|>user\n<tool_response>\n{tools_response}\n</tool_response><|im_end|>\n"
 codestral:
   id: codestral
@@ -159,7 +159,7 @@ granite-tools:
     message: "You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request."
   tools:
     def: "<|start_of_role|>tools<|end_of_role|>{tools}<|end_of_text|>"
-    call: "<|tool_call|>{tool}"
+    call: "<tool_call>{tools}"
     response: "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>\n"
   linebreaks:
     user: 1
@@ -217,7 +217,7 @@ deephermes:
     message: "You are a function calling AI model. You are provided with function signatures within <tools></tools> XML tags. You may call one or more functions to assist with the user query. Don't make assumptions about what values to plug into functions. Here are the available tools: <tools> {tools} </tools>. For each function call return a json object with function name and arguments within <tool_call></tool_call> XML tags as follows:\n<tool_call>\n{\"arguments\": <args-dict>, \"name\": <function-name>}\n</tool_call>"
   tools:
     def: "{system}"
-    call: "<tool_call>\n{tool}\n</tool_call>"
+    call: "<tool_call>\n{tools}\n</tool_call>"
     response: "<|start_header_id|>user<|end_header_id|>\n<tool_response>\n{tools_response}\n</tool_response><|eot_id|>\n"
 llava:
   id: llava
@@ -266,7 +266,7 @@ mistral-system-tools:
   afterShot: "\n"
   tools:
     def: "[AVAILABLE_TOOLS]{tools}[/AVAILABLE_TOOLS]"
-    call: "[TOOL_CALLS] [{tool}]</s>"
+    call: "[TOOL_CALLS] {tools}</s>"
     response: "[TOOL_RESULTS]{tools_response}[/TOOL_RESULTS]"
 nemotron:
   id: nemotron
