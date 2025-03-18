@@ -49,13 +49,13 @@ const templates: Record<string, LmTemplate> = {
       "<|im_end|>"
     ],
     "system": {
-      "message": "You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\\n{tools}\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\\n</tool_call>",
+      "message": "You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
       "schema": "<|im_start|>system\n{system}<|im_end|>"
     },
     "tools": {
-      "call": "<tool_call>\n{tool}\n</tool_call>",
+      "call": "<tool_call>\n{tools}\n</tool_call>",
       "def": "{system}",
-      "response": "<|im_start|>user\n<tool_response>\n{tools_response}\n</tool_response><|im_end|>\n"
+      "response": "<|im_start|>user\n<tool_response>\n{tools_response}\n</tool_response><|im_end|>"
     },
     "user": "<|im_start|>user\n{prompt}<|im_end|>"
   },
@@ -341,7 +341,7 @@ const templates: Record<string, LmTemplate> = {
       "schema": "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
     },
     "tools": {
-      "call": "[TOOL_CALLS] {tools}</s>",
+      "call": "[TOOL_CALLS]{tools}",
       "def": "[AVAILABLE_TOOLS]{tools}[/AVAILABLE_TOOLS]",
       "response": "[TOOL_RESULTS]{tools_response}[/TOOL_RESULTS]"
     },

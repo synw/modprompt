@@ -28,7 +28,17 @@ chatml-tools:
   name: "ChatMl"
   system:
     schema: "<|im_start|>system\n{system}<|im_end|>"
-    message: 'You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{"name": <function-name>, "arguments": <args-json-object>}\n</tool_call>'
+    message: |-
+      You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.
+      You are provided with function signatures within <tools></tools> XML tags:
+      <tools>
+      {tools}
+      </tools>
+      
+      For each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:
+      <tool_call>
+      [{"name": <function-name>, "arguments": <args-json-object>}]
+      </tool_call>
   user: "<|im_start|>user\n{prompt}<|im_end|>"
   assistant: "<|im_start|>assistant"
   linebreaks:
@@ -40,8 +50,15 @@ chatml-tools:
   afterShot: " <|im_end|>\n"
   tools:
     def: "{system}"
-    call: "<tool_call>\n{tools}\n</tool_call>"
-    response: "<|im_start|>user\n<tool_response>\n{tools_response}\n</tool_response><|im_end|>\n"
+    call: |-
+      <tool_call>
+      {tools}
+      </tool_call>
+    response: |- 
+      <|im_start|>user
+      <tool_response>
+      {tools_response}
+      </tool_response><|im_end|>
 codestral:
   id: codestral
   name: Codestral
@@ -266,7 +283,7 @@ mistral-system-tools:
   afterShot: "\n"
   tools:
     def: "[AVAILABLE_TOOLS]{tools}[/AVAILABLE_TOOLS]"
-    call: "[TOOL_CALLS] {tools}</s>"
+    call: "[TOOL_CALLS]{tools}"
     response: "[TOOL_RESULTS]{tools_response}[/TOOL_RESULTS]"
 nemotron:
   id: nemotron

@@ -88,9 +88,13 @@ class PromptTemplate {
     }
     let isToolCall = false;
     let toolsCall = new Array<Record<string, any>>();
-    if (answer.startsWith(this._toolCallStart)) {
+    const ans = answer.trim();
+    //console.log("\nTC ANSWER", ans);
+    //console.log("TC SW", this._toolCallStart, ans.startsWith(this._toolCallStart));
+    if (ans.startsWith(this._toolCallStart)) {
       isToolCall = true;
-      const tcs = this._parseToolCallString(answer);
+      let tcs = this._parseToolCallString(answer).trim();
+      //console.log("TCS", tcs);
       let errMsg = "";
       try {
         const tc = JSON.parse(tcs);
@@ -98,6 +102,7 @@ class PromptTemplate {
           errMsg = `error parsing tool call response from model: the response object is not an Array:\n${answer}`;
           console.log(errMsg)
         }
+        //console.log("TC", tc)
         toolsCall = tc;
       } catch (e) {
         errMsg = `error parsing tool call response from model:\n${answer}`;
@@ -107,6 +112,7 @@ class PromptTemplate {
         return { isToolCall: false, toolsCall: [], error: errMsg };
       }
     }
+    //console.log("FTC", isToolCall, toolsCall);
     return { isToolCall: isToolCall, toolsCall: toolsCall };
   }
 
@@ -450,6 +456,9 @@ class PromptTemplate {
       return _t
     }
     toolsBlock += this.toolsDef.def.replace("{tools}", _t);
+    /*console.log("TB-------");
+    console.log(toolsBlock);
+    console.log("END------------")*/
     return toolsBlock
   }
 
