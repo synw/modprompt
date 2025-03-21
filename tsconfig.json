@@ -52,6 +52,6 @@
       "src/cls.ts",
       "src/db.ts",
     ],
-    "out": "docs",
+    "out": "docsite/dist/apidoc",
   }
 }
