@@ -8,7 +8,7 @@
 </template>*
 
 <script setup lang="ts">
-import { PromptTemplate } from "../../../dist/main";
+import { PromptTemplate } from "modprompt";
 
 const props = defineProps({
     tpl: {

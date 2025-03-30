@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { PromptTemplate, templates } from "../../../dist/main";
+import { PromptTemplate, templates } from "modprompt";
 import { reactive, ref } from "@vue/reactivity";
 import RenderTemplate from "@/components/RenderTemplate.vue";
 import { onBeforeMount } from "vue";

@@ -4,13 +4,12 @@
             <h1>Tools</h1>
         </div>
         <div class="flex flex-wrap gap-2 justify-evenly">
-            <button v-for="tpl in templatesList" class="btn bord-lighter"
-            :class="currentTpl == tpl.id ? 'success': ''"
-            @click="renderTemplate(tpl.id)">
+            <button v-for="tpl in templatesList" class="btn bord-lighter" :class="currentTpl == tpl.id ? 'success' : ''"
+                @click="renderTemplate(tpl.id)">
                 {{ tpl.name }}
             </button>
         </div>
-        <template  v-if="currentTpl.length>0">
+        <template v-if="currentTpl.length > 0">
             <!-- @vue-ignore-->
             <RenderTemplate :tpl="tpl" class="mt-12 max-w-6xl flex flex-row justify-center"></RenderTemplate>
         </template>
@@ -18,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { PromptTemplate, templates } from "../../../dist/main";
+import { PromptTemplate, templates } from "modprompt";
 import { reactive, ref } from "@vue/reactivity";
 import RenderTemplate from "@/components/RenderTemplate.vue";
 import { LmTemplate } from "modprompt";
@@ -40,11 +39,11 @@ const tool1 = {
 
 function renderTemplate(id: string) {
     tpl.value = new PromptTemplate(id).addTool(tool1);
-    currentTpl.value=id;
+    currentTpl.value = id;
 }
 
 function init() {
-    for (const [k,v] of Object.entries(templates)) {
+    for (const [k, v] of Object.entries(templates)) {
         console.log(v)
         if (v?.tools) {
             templatesList[k] = v
