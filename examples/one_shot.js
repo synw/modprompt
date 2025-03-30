@@ -6,8 +6,8 @@ import { templates, PromptTemplate } from "../dist/main.js";
 //console.log("Available templates:", Object.keys(templates));
 const _prompt = "fix this invalid json:\n\n```json\n{prompt}\n```";
 // load template
-const tpl = new PromptTemplate(templates.phi4)
-  .replaceSystem("You are a javascript specialist")
+const tpl = new PromptTemplate(templates.granite)
+  .afterSystem(" You are a javascript specialist")
   .afterAssistant("```json")
   .replacePrompt(_prompt)
   .addShot(

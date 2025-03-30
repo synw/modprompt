@@ -28,12 +28,10 @@ chatml:
     assistant: 1
   stop:
     - "<|im_end|>"
-  afterShot: |-
-     <|im_end|>
-
+  afterShot: "<|im_end|>\n"
 chatml-tools:
-  id: "chatml"
-  name: "ChatMl"
+  id: "chatml-tools"
+  name: "ChatMl tools"
   system:
     schema: "<|im_start|>system\n{system}<|im_end|>"
     message: |-
@@ -98,6 +96,39 @@ command-r:
     user: 1
   system:
     schema: "<|START_OF_TURN_TOKEN|><|SYSTEM_TOKEN|>{system}<|END_OF_TURN_TOKEN|>"
+deephermes:
+  id: deephermes
+  name: Deephermes
+  user: |-
+    <|start_header_id|>user<|end_header_id|>
+    {prompt}<|eot_id|>
+  assistant: "<|start_header_id|>assistant<|end_header_id|>"
+  stop:
+    - "<|eot_id|>"
+    - "<|end_of_text|>"
+  afterShot: "<|eot_id|>\n\n"
+  system:
+    schema: |-
+      <|start_header_id|>system<|end_header_id|>
+      
+      {system}<|eot_id|>
+    message: |-
+      You are a function calling AI model. You are provided with function signatures within <tools></tools> XML tags. You may call one or more functions to assist with the user query. Don't make assumptions about what values to plug into functions. Here are the available tools: <tools> {tools} </tools>. For each function call return a json object with function name and arguments within <tool_call></tool_call> XML tags as follows:
+      <tool_call>
+      [{"arguments": <args-dict>, "name": <function-name>}]
+      </tool_call>
+  tools:
+    def: "{system}"
+    call: |-
+      <tool_call>
+      {tools}
+      </tool_call>
+    response: |-
+      <|start_header_id|>user<|end_header_id|>
+      <tool_response>
+      {tools_response}
+      </tool_response><|eot_id|>
+
 deepseek:
   id: deepseek
   name: Deepseek
@@ -150,8 +181,7 @@ exaone:
     message: You are EXAONE model from LG AI Research, a helpful assistant.
   user: "[|user|]{prompt}[|endofturn|]"
   assistant: "[|assistant|]"
-  afterShot:
-    "[|endofturn|]"
+  afterShot: "[|endofturn|]"
   stop:
     - "[|endofturn|]"
   linebreaks:
@@ -164,12 +194,12 @@ gemma:
     <start_of_turn>user
     {prompt}
      <end_of_turn>
+     
   assistant: |-   
     <start_of_turn>model
   stop:
     - "<end_of_turn>"
-  afterShot: 
-    <end_of_turn>
+  afterShot: "<end_of_turn>"
 granite:
   id: granite
   name: Granite
@@ -184,9 +214,7 @@ granite:
   linebreaks:
     user: 1
     system: 1
-  afterShot: |-
-    <|end_of_text|>
-
+  afterShot: "<|end_of_text|>\n"
 granite-think:
   id: granite-think
   name: Granite think
@@ -201,9 +229,7 @@ granite-think:
   linebreaks:
     user: 1
     system: 1
-  afterShot: |-
-    <|end_of_text|>
-
+  afterShot: "<|end_of_text|>\n"
 granite-tools:
   id: granite-tools
   name: Granite tools
@@ -223,9 +249,7 @@ granite-tools:
     user: 1
     system: 1
     tools: 1
-  afterShot: |-
-    <|end_of_text|>
-
+  afterShot: "<|end_of_text|>\n"
 llama:
   id: llama
   name: Llama
@@ -264,8 +288,8 @@ llama3:
       
       {system}<|eot_id|>
 llama3-think:
-  id: llama3
-  name: Llama 3
+  id: llama3-think
+  name: Llama 3 think
   user: |-
     <|start_header_id|>user<|end_header_id|>
     
@@ -274,52 +298,13 @@ llama3-think:
   stop:
     - "<|eot_id|>"
     - "<|end_of_text|>"
-  afterShot: |-
-    <|eot_id|>
-
-
+  afterShot: "<|eot_id|>\n\n"
   system:
     schema: |-
       <|start_header_id|>system<|end_header_id|>
       
       {system}<|eot_id|>
     message: "You are a deep thinking AI, you may use extremely long chains of thought to deeply consider the problem and deliberate with yourself via systematic reasoning processes to help come to a correct solution prior to answering. You should enclose your thoughts and internal monologue inside <think> </think> tags, and then provide your solution or response to the problem."
-deephermes:
-  id: deephermes
-  name: Deephermes
-  user: |-
-    <|start_header_id|>user<|end_header_id|>
-    {prompt}<|eot_id|>
-  assistant: "<|start_header_id|>assistant<|end_header_id|>"
-  stop:
-    - "<|eot_id|>"
-    - "<|end_of_text|>"
-  afterShot: |-
-    <|eot_id|>
-
-
-  system:
-    schema: |-
-      <|start_header_id|>system<|end_header_id|>
-      
-      {system}<|eot_id|>
-    message: |-
-      You are a function calling AI model. You are provided with function signatures within <tools></tools> XML tags. You may call one or more functions to assist with the user query. Don't make assumptions about what values to plug into functions. Here are the available tools: <tools> {tools} </tools>. For each function call return a json object with function name and arguments within <tool_call></tool_call> XML tags as follows:
-      <tool_call>
-      [{"arguments": <args-dict>, "name": <function-name>}]
-      </tool_call>
-  tools:
-    def: "{system}"
-    call: |-
-      <tool_call>
-      {tools}
-      </tool_call>
-    response: |-
-      <|start_header_id|>user<|end_header_id|>
-      <tool_response>
-      {tools_response}
-      </tool_response><|eot_id|>
-
 llava:
   id: llava
   name: Llava
@@ -348,20 +333,20 @@ mistral:
 mistral-system:
   id: mistral-system
   name: Mistral system
-  user: "[INST]{prompt}"
-  assistant: "[/INST]"
+  user: "[INST] {prompt}"
+  assistant: " [/INST]"
   system:
-    schema: "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
+    schema: "[SYSTEM_PROMPT]{system}[/SYSTEM_PROMPT] "
   stop:
     - "</s>"
   afterShot: "\n"
 mistral-system-tools:
-  id: mistral-system
-  name: Mistral system
-  user: "[INST]{prompt}[/INST]"
+  id: mistral-system-tools
+  name: Mistral system tools
+  user: "[INST] {prompt} [/INST]"
   assistant: ""
   system:
-    schema: "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
+    schema: "[SYSTEM_PROMPT]{system}[/SYSTEM_PROMPT] "
   stop:
     - "</s>"
   afterShot: "\n"
@@ -375,7 +360,7 @@ nemotron:
   user: |-
     <extra_id_1>User
     {prompt}
-  assistant: "<extra_id_1>Assistant"
+  assistant: "<extra_id_1>Assistant\n"
   linebreaks:
     system: 2
     user: 1
@@ -425,9 +410,7 @@ phi3:
   assistant: "<|assistant|>"
   system:
     schema: "<|system|> {system}<|end|>"
-  afterShot: |-
-    <|end|>
-
+  afterShot: "<|end|>\n"
   stop:
     - "<|end|>"
     - "<|user|>"
@@ -441,9 +424,7 @@ phi4:
   stop:
     - "<|im_end|>"
     - "<|im_sep|>"
-  afterShot: |-
-    <|im_end|>
-
+  afterShot: "<|im_end|>\n"
 reka:
   id: reka
   name: Reka

@@ -419,18 +419,32 @@ class PromptTemplate {
     if (!this?.system) {
       return ""
     }
-    if (this._replaceSystem) {
+    if (this._replaceSystem.length > 0) {
       this.system.message = this._replaceSystem;
     }
+    //console.log("SYS MSG", this.system?.message);
     if (this.system?.message) {
-      res = this.system.schema.replace("{system}", this.system.message);
-      if (this._extraSystem) {
-        res = res + this._extraSystem
+      if (this._extraSystem.length > 0) {
+        this.system.message = this.system.message + this._extraSystem
       }
-    } else if (!skip_empty_system) {
-      res = this.system.schema;
+      //console.log("ES M", this.s);
+      res = this.system.schema.replace("{system}", this.system.message);
+    } else {
+      //console.log("NO SYS MSG");
+      if (this._extraSystem.length > 0) {
+        //console.log("EXTRA SYS", this._extraSystem);
+        //console.log("SYS SCHEMA", this.system.schema);
+        res = this.system.schema.replace("{system}", this._extraSystem);
+        //console.log("TMP SYS RES", res);
+      }
     }
-    if (systemTools) {
+    //console.log("SYS RES", res);
+    if (res == "") {
+      if (!skip_empty_system) {
+        res = this.system.schema;
+      }
+    }
+    if (systemTools && this.tools.length > 0) {
       res = res.replace("{tools}", this._buildToolsBlock(true))
     }
     return res

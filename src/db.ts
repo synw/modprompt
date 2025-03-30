@@ -18,7 +18,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "### Instruction:\n{prompt}"
   },
   "chatml": {
-    "afterShot": "<|im_end|>",
+    "afterShot": "<|im_end|>\n",
     "assistant": "<|im_start|>assistant",
     "id": "chatml",
     "linebreaks": {
@@ -38,13 +38,13 @@ const templates: Record<string, LmTemplate> = {
   "chatml-tools": {
     "afterShot": "<|im_end|>",
     "assistant": "<|im_start|>assistant",
-    "id": "chatml",
+    "id": "chatml-tools",
     "linebreaks": {
       "assistant": 1,
       "system": 1,
       "user": 1
     },
-    "name": "ChatMl",
+    "name": "ChatMl tools",
     "stop": [
       "<|im_end|>"
     ],
@@ -92,7 +92,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|START_OF_TURN_TOKEN|><|USER_TOKEN|>{prompt}<|END_OF_TURN_TOKEN|>"
   },
   "deephermes": {
-    "afterShot": "<|eot_id|>",
+    "afterShot": "<|eot_id|>\n\n",
     "assistant": "<|start_header_id|>assistant<|end_header_id|>",
     "id": "deephermes",
     "name": "Deephermes",
@@ -191,10 +191,10 @@ const templates: Record<string, LmTemplate> = {
     "stop": [
       "<end_of_turn>"
     ],
-    "user": "<start_of_turn>user\n{prompt}\n <end_of_turn>"
+    "user": "<start_of_turn>user\n{prompt}\n <end_of_turn>\n "
   },
   "granite": {
-    "afterShot": "<|end_of_text|>",
+    "afterShot": "<|end_of_text|>\n",
     "assistant": "<|start_of_role|>assistant<|end_of_role|>",
     "id": "granite",
     "linebreaks": {
@@ -213,7 +213,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
   },
   "granite-think": {
-    "afterShot": "<|end_of_text|>",
+    "afterShot": "<|end_of_text|>\n",
     "assistant": "<|start_of_role|>assistant<|end_of_role|>",
     "id": "granite-think",
     "linebreaks": {
@@ -232,7 +232,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
   },
   "granite-tools": {
-    "afterShot": "<|end_of_text|>",
+    "afterShot": "<|end_of_text|>\n",
     "assistant": "<|start_of_role|>assistant<|end_of_role|>",
     "id": "granite-tools",
     "linebreaks": {
@@ -289,10 +289,10 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>"
   },
   "llama3-think": {
-    "afterShot": "<|eot_id|>",
+    "afterShot": "<|eot_id|>\n\n",
     "assistant": "<|start_header_id|>assistant<|end_header_id|>",
-    "id": "llama3",
-    "name": "Llama 3",
+    "id": "llama3-think",
+    "name": "Llama 3 think",
     "stop": [
       "<|eot_id|>",
       "<|end_of_text|>"
@@ -336,38 +336,38 @@ const templates: Record<string, LmTemplate> = {
   },
   "mistral-system": {
     "afterShot": "\n",
-    "assistant": "[/INST]",
+    "assistant": " [/INST]",
     "id": "mistral-system",
     "name": "Mistral system",
     "stop": [
       "</s>"
     ],
     "system": {
-      "schema": "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
+      "schema": "[SYSTEM_PROMPT]{system}[/SYSTEM_PROMPT] "
     },
-    "user": "[INST]{prompt}"
+    "user": "[INST] {prompt}"
   },
   "mistral-system-tools": {
     "afterShot": "\n",
     "assistant": "",
-    "id": "mistral-system",
-    "name": "Mistral system",
+    "id": "mistral-system-tools",
+    "name": "Mistral system tools",
     "stop": [
       "</s>"
     ],
     "system": {
-      "schema": "[SYSTEM_PROMPT]{system_prompt}[/SYSTEM_PROMPT]"
+      "schema": "[SYSTEM_PROMPT]{system}[/SYSTEM_PROMPT] "
     },
     "tools": {
       "call": "[TOOL_CALLS]{tools}",
       "def": "[AVAILABLE_TOOLS]{tools}[/AVAILABLE_TOOLS]",
       "response": "[TOOL_RESULTS]{tools_response}[/TOOL_RESULTS]"
     },
-    "user": "[INST]{prompt}[/INST]"
+    "user": "[INST] {prompt} [/INST]"
   },
   "nemotron": {
     "afterShot": "\n\n",
-    "assistant": "<extra_id_1>Assistant",
+    "assistant": "<extra_id_1>Assistant\n",
     "id": "nemotron",
     "linebreaks": {
       "system": 2,
@@ -418,7 +418,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "### User:\n{prompt}"
   },
   "phi3": {
-    "afterShot": "<|end|>",
+    "afterShot": "<|end|>\n",
     "assistant": "<|assistant|>",
     "id": "phi3",
     "name": "Phi 3",
@@ -432,7 +432,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|user|> {prompt}<|end|>"
   },
   "phi4": {
-    "afterShot": "<|im_end|>",
+    "afterShot": "<|im_end|>\n",
     "assistant": "<|im_start|>assistant<|im_sep|>",
     "id": "phi4",
     "name": "Phi 4",
