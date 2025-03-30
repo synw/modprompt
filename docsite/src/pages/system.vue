@@ -10,15 +10,17 @@
             </button>
         </div>
         <div v-if="currentTpl.length > 0" class="flex flex-wrap gap-8 justify-center">
-            <!-- @vue-ignore-->
-            <RenderTemplate :tpl="tpl" class="mt-12 max-w-6xl flex flex-row justify-center"
-                title="Initial system prompt"></RenderTemplate>
-            <!-- @vue-ignore-->
-            <RenderTemplate :tpl="tpl2" class="mt-12 max-w-6xl flex flex-row justify-center"
-                title="Replace system prompt"></RenderTemplate>
-            <!-- @vue-ignore-->
-            <RenderTemplate :tpl="tpl3" class="mt-12 max-w-6xl flex flex-row justify-center"
-                title="After system prompt"></RenderTemplate>
+            <div class="flex flex-col">
+                <div class="flex flex-row">
+                    <button class="btn" @click="renderTemplate(currentTpl)">Initial system prompt</button>
+                    <button class="btn" @click="renderTemplateSys(currentTpl)">Replace system prompt</button>
+                    <button class="btn" @click="renderTemplateAfterSys(currentTpl)">After system prompt</button>
+                </div>
+                <div v-if="tpl">
+                    <RenderTemplate :tpl="tpl" class="mt-12 max-w-6xl flex flex-row justify-center"
+                        title="Initial system prompt"></RenderTemplate>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -30,19 +32,26 @@ import RenderTemplate from "@/components/RenderTemplate.vue";
 import { onBeforeMount } from "vue";
 import { LmTemplate } from "modprompt";
 
-let tpl = {} as PromptTemplate;
-let tpl2 = {} as PromptTemplate;
-let tpl3 = {} as PromptTemplate;
+let tpl = ref<PromptTemplate | null>(null);
 const currentTpl = ref("");
 const system = "You are an AI assistant.";
 const afterSystem = " You are a javascript specialist.";
 const templatesList = reactive<Record<string, LmTemplate>>({});
 
 function renderTemplate(id: string) {
+    tpl.value = null;
     currentTpl.value = id;
-    tpl = new PromptTemplate(id);
-    tpl2 = new PromptTemplate(id).replaceSystem(system);
-    tpl3 = new PromptTemplate(id).afterSystem(afterSystem);
+    tpl.value = new PromptTemplate(id);
+}
+
+function renderTemplateSys(id: string) {
+    tpl.value = null;
+    tpl.value = new PromptTemplate(id).replaceSystem(system);
+}
+
+function renderTemplateAfterSys(id: string) {
+    tpl.value = null;
+    tpl.value = new PromptTemplate(id).afterSystem(afterSystem);
 }
 
 function init() {

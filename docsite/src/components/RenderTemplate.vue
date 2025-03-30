@@ -21,8 +21,6 @@ const props = defineProps({
 });
 
 function render() {
-    //tpl.addShot("hi", "hello how can I help you?")
-    //tpl.afterSystem("You are a helpful assistant")
     const txt = props.tpl.render(false)
     return txt.replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
