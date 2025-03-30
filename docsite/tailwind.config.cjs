@@ -53,7 +53,17 @@ module.exports = {
             bg: colors.stone[900],
             txt: colors.neutral[100]
           }
-        }
+        },
+        superlight: {
+          light: {
+            bg: colors.slate[50],
+            txt: colors.neutral[800]
+          },
+          dark: {
+            bg: colors.stone[900],
+            txt: colors.neutral[200]
+          }
+        },
       }
     }
   }
