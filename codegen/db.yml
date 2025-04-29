@@ -243,7 +243,7 @@ granite-tools:
     message: "You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request."
   tools:
     def: "<|start_of_role|>tools<|end_of_role|>{tools}<|end_of_text|>"
-    call: "<tool_call>{tools}"
+    call: "<|tool_call|>{tools}"
     response: "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>\n"
   linebreaks:
     user: 1

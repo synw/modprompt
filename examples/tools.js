@@ -2,9 +2,15 @@
 import { Lm } from "@locallm/api";
 import { PromptTemplate } from "../dist/main.js";
 
-// ollama pull qwen2.5:3b-instruct-q8_0
+const template = new PromptTemplate("granite-tools").addTool(weatherToolDef);
+const model = "granite3.3:latest";
+//const template = new PromptTemplate("chatml-tools").addTool(weatherToolDef);
+//const model = "qwen2.5:3b";
+//const template = new PromptTemplate("mistral-system-tools").addTool(weatherToolDef);
+//const model = "mistral-small:latest";
+const prompt = "What is the current weather in London?";
 
-const tool1 = {
+const weatherToolDef = {
     "name": "get_current_weather",
     "description": "Get the current weather",
     "arguments": {
@@ -14,14 +20,10 @@ const tool1 = {
     }
 };
 
-//const template = new PromptTemplate("granite-tools").addTool(tool1);
-//const model = "granite3.2:2b-instruct-q8_0";
-const template = new PromptTemplate("mistral-system-tools").addTool(tool1);
-const model = "mistral-small:latest";
-//const template = new PromptTemplate("chatml-tools").addTool(tool1);
-//const model = "qwen2.5:3b-instruct-q8_0";
-const prompt = "What is the current weather in London?";
-const toolResponse = '{“temp”: 20.5, “unit”: “C”}';
+function get_current_weather(args) {
+    console.log("Running the get_current_weather tool with args", args);
+    return '{“temp”: 20.5, “unit”: “C”}'
+}
 
 async function main() {
     const lm = new Lm({
@@ -32,7 +34,7 @@ async function main() {
     process.on('SIGINT', () => {
         lm.abort().then(() => process.exit());
     });
-    await lm.loadModel(model, 8192);
+    await lm.loadModel(model, 2048);
     console.log("Loaded model", lm.model);
     const _prompt = template.prompt(prompt);
     console.log("\n----------- Turn 1 prompt:");
@@ -45,11 +47,27 @@ async function main() {
             raw: true
         }
     });
+    const { isToolCall, toolsCall, error } = template.processAnswer(res.text);
+    if (error) {
+        throw new Error(`Error processing tool call answer:\n, ${answer}`);
+    }
+    if (!isToolCall) {
+        return
+    }
+    let toolResponse = {};
+    toolsCall.forEach((tc) => {
+        console.log("Executing tool call:", tc);
+        if (tc.name == "get_current_weather") {
+            toolResponse = get_current_weather(tc.arguments)
+        }
+    });
+    console.log("Tools response", toolResponse);
+    //console.log("\nProcessed answer", isToolCall, toolsCall, error);
     //return
     template.pushToHistory({
         user: prompt,
         assistant: res.text,
-        tool: toolResponse,
+        tool: toolResponse.toString(),
     });
     console.log("\n----------- Turn 2 prompt:");
     const _nextPrompt = template.render();
@@ -63,6 +81,7 @@ async function main() {
             raw: true
         }
     });
+    console.log()
 }
 
 (async () => {

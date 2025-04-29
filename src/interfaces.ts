@@ -304,6 +304,13 @@ interface HistoryTurn {
   images?: Array<ImgData>;
 }
 
+interface ToolCallSpec {
+  name?: string;
+  arguments?: {
+    [key: string]: string;
+  };
+}
+
 /**
  * Specification for a tool that can be used within the conversation.
  *
@@ -351,4 +358,5 @@ export {
   ImgData,
   LmToolsDef,
   ToolSpec,
+  ToolCallSpec,
 }

@@ -1,5 +1,6 @@
-import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn, LmToolsDef, ToolSpec } from "./interfaces.js";
+import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn, LmToolsDef, ToolSpec, ToolCallSpec } from "./interfaces.js";
 import { templates } from "./db.js";
+import { extractBetweenTags } from "./utils.js";
 
 /**
  * Represents a modified language model template.
@@ -91,13 +92,13 @@ class PromptTemplate {
     const ans = answer.trim();
     //console.log("\nTC ANSWER", ans);
     //console.log("TC SW", this._toolCallStart, ans.startsWith(this._toolCallStart));
-    if (ans.startsWith(this._toolCallStart)) {
+    if (ans.includes(this._toolCallStart)) {
       isToolCall = true;
-      let tcs = this._parseToolCallString(answer).trim();
-      //console.log("TCS", tcs);
+      const tc = this._parseToolCallString(answer);
+      //console.log("TCS", tc);
       let errMsg = "";
       try {
-        const tc = JSON.parse(tcs);
+        //const tc = JSON.parse(tcs);
         if (!Array.isArray(tc)) {
           errMsg = `error parsing tool call response from model: the response object is not an Array:\n${answer}`;
           console.log(errMsg)
@@ -525,12 +526,16 @@ class PromptTemplate {
     }
   }
 
-  private _parseToolCallString(raw: string): string {
-    let call = raw.replace(this._toolCallStart, "");
+
+
+  private _parseToolCallString(raw: string): Array<ToolCallSpec> {
+    return extractBetweenTags(raw, this._toolCallStart, this._toolCallEnd ?? undefined)
+
+    /*let call = raw.replace(this._toolCallStart, "");
     if (this._toolCallEnd) {
       call = call.replace(this._toolCallEnd, "");
     }
-    return call
+    return call*/
   }
 }
 
