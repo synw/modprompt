@@ -414,7 +414,7 @@ phi3:
   stop:
     - "<|end|>"
     - "<|user|>"
-phi4-tools:
+phi4:
   id: phi4
   name: Phi 4
   system:
@@ -425,7 +425,7 @@ phi4-tools:
     - "<|im_end|>"
     - "<|im_sep|>"
   afterShot: "<|im_end|>\n"
-phi4:
+phi4-tools:
   id: phi4-tools
   name: Phi 4 tools
   system:
