@@ -27,12 +27,14 @@ function extractBetweenTags(
     const content = text.substring(contentStart, contentEnd).trim();
 
     // Parse JSON content
-    const parsed = JSON.parse(content);
+    let parsed = JSON.parse(content);
+    if (!Array.isArray(parsed)) {
+      parsed = [parsed]
+    }
     return parsed;
 
   } catch (error) {
-    console.error('Error parsing content:', error);
-    return [];
+    throw new Error(`Error parsing tool response content: ${error}`);
   }
 }
 

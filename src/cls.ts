@@ -100,14 +100,12 @@ class PromptTemplate {
       try {
         //const tc = JSON.parse(tcs);
         if (!Array.isArray(tc)) {
-          errMsg = `error parsing tool call response from model: the response object is not an Array:\n${answer}`;
-          console.log(errMsg)
+          throw new Error(`error parsing tool call response from model: the response object is not an Array:\n${tc}`);
         }
         //console.log("TC", tc)
         toolsCall = tc;
       } catch (e) {
-        errMsg = `error parsing tool call response from model:\n${answer}`;
-        console.log(errMsg)
+        throw new Error(`error parsing tool call response from model:\n${answer}`);
       }
       if (errMsg) {
         return { isToolCall: false, toolsCall: [], error: errMsg };
@@ -530,12 +528,6 @@ class PromptTemplate {
 
   private _parseToolCallString(raw: string): Array<ToolCallSpec> {
     return extractBetweenTags(raw, this._toolCallStart, this._toolCallEnd ?? undefined)
-
-    /*let call = raw.replace(this._toolCallStart, "");
-    if (this._toolCallEnd) {
-      call = call.replace(this._toolCallEnd, "");
-    }
-    return call*/
   }
 }
 

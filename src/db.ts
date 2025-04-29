@@ -434,6 +434,25 @@ const templates: Record<string, LmTemplate> = {
   "phi4": {
     "afterShot": "<|im_end|>\n",
     "assistant": "<|im_start|>assistant<|im_sep|>",
+    "id": "phi4-tools",
+    "name": "Phi 4 tools",
+    "stop": [
+      "<|im_end|>",
+      "<|im_sep|>"
+    ],
+    "system": {
+      "schema": "<|im_start|>system<|im_sep|>You are a helpful assistant with some tools.<|tool|>{tools}<|/tool|><|im_end|>"
+    },
+    "tools": {
+      "call": "<|tool_call|>\n{tools}\n<|/tool_call|>",
+      "def": "{system}",
+      "response": "<|im_start|>user\n<|tool_response|>\n{tools_response}\n<|/tool_response|><|im_end|>"
+    },
+    "user": "<|im_start|>user<|im_sep|>{prompt}<|im_end|>"
+  },
+  "phi4-tools": {
+    "afterShot": "<|im_end|>\n",
+    "assistant": "<|im_start|>assistant<|im_sep|>",
     "id": "phi4",
     "name": "Phi 4",
     "stop": [
