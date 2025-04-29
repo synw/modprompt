@@ -429,7 +429,17 @@ phi4-tools:
   id: phi4-tools
   name: Phi 4 tools
   system:
-    schema: "<|im_start|>system<|im_sep|>You are a helpful assistant with some tools.<|tool|>{tools}<|/tool|><|im_end|>"
+    schema: "<|im_start|>system<|im_sep|>{system}<|im_end|>"
+    message: |-
+      You are a helpful assistant with some tools.
+      <|tool|>
+      {tools}
+      <|/tool|>
+
+      For each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:
+      <tool_call>
+      [{"name": <function-name>, "arguments": <args-json-object>}]
+      </tool_call>
   user: "<|im_start|>user<|im_sep|>{prompt}<|im_end|>"
   assistant: "<|im_start|>assistant<|im_sep|>"
   stop:

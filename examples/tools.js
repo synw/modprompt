@@ -2,30 +2,35 @@
 import { Lm } from "@locallm/api";
 import { PromptTemplate } from "../dist/main.js";
 
-const template = new PromptTemplate("granite-tools").addTool(weatherToolDef);
-const model = "granite3.3:latest";
-//const template = new PromptTemplate("chatml-tools").addTool(weatherToolDef);
-//const model = "qwen2.5:3b";
-//const template = new PromptTemplate("mistral-system-tools").addTool(weatherToolDef);
-//const model = "mistral-small:latest";
-const prompt = "What is the current weather in London?";
+// Run an Ollama instance with one of these models:
 
-const weatherToolDef = {
-    "name": "get_current_weather",
-    "description": "Get the current weather",
-    "arguments": {
-        "location": {
-            "description": "The city and state, e.g. San Francisco, CA"
-        }
-    }
-};
+const model = { name: "granite3.3:2b", template: "granite-tools" };
+//const model = { name: "qwen3:4b", template: "chatml-tools" };
+//const model = { name: "mistral-small3.1:24b", template: "mistral-system-tools" };
+//const model = { name: "phi4-mini:3.8b-q8_0", template: "phi4-tools" };
+
+const prompt = "What is the current weather in London?";
 
 function get_current_weather(args) {
     console.log("Running the get_current_weather tool with args", args);
     return '{“temp”: 20.5, “unit”: “C”}'
 }
 
+const tools = {
+    get_current_weather: {
+        "name": "get_current_weather",
+        "description": "Get the current weather",
+        "arguments": {
+            "location": {
+                "description": "The city and state, e.g. San Francisco, CA"
+            }
+        },
+        execute: (args) => get_current_weather(args)
+    },
+};
+
 async function main() {
+    const template = new PromptTemplate(model.template).addTool(tools.get_current_weather);
     const lm = new Lm({
         providerType: "ollama",
         serverUrl: "http://localhost:11434",
@@ -34,7 +39,7 @@ async function main() {
     process.on('SIGINT', () => {
         lm.abort().then(() => process.exit());
     });
-    await lm.loadModel(model, 2048);
+    await lm.loadModel(model.name, 2048);
     console.log("Loaded model", lm.model);
     const _prompt = template.prompt(prompt);
     console.log("\n----------- Turn 1 prompt:");
@@ -57,9 +62,7 @@ async function main() {
     let toolResponse = {};
     toolsCall.forEach((tc) => {
         console.log("Executing tool call:", tc);
-        if (tc.name == "get_current_weather") {
-            toolResponse = get_current_weather(tc.arguments)
-        }
+        toolResponse = tools[tc.name].execute(tc.arguments)
     });
     console.log("Tools response", toolResponse);
     //console.log("\nProcessed answer", isToolCall, toolsCall, error);

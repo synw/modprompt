@@ -455,7 +455,8 @@ const templates: Record<string, LmTemplate> = {
       "<|im_sep|>"
     ],
     "system": {
-      "schema": "<|im_start|>system<|im_sep|>You are a helpful assistant with some tools.<|tool|>{tools}<|/tool|><|im_end|>"
+      "message": "You are a helpful assistant with some tools.\n<|tool|>\n{tools}\n<|/tool|>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
+      "schema": "<|im_start|>system<|im_sep|>{system}<|im_end|>"
     },
     "tools": {
       "call": "<|tool_call|>\n{tools}\n<|/tool_call|>",
