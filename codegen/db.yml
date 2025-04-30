@@ -29,6 +29,9 @@ chatml:
   stop:
     - "<|im_end|>"
   afterShot: "<|im_end|>\n"
+  tags:
+    think:  <think>
+    endThink: </think>
 chatml-tools:
   id: "chatml-tools"
   name: "ChatMl tools"
@@ -69,6 +72,9 @@ chatml-tools:
       <tool_response>
       {tools_response}
       </tool_response><|im_end|>
+  tags:
+    think:  <think>
+    endThink: </think>
 codestral:
   id: codestral
   name: Codestral
@@ -435,11 +441,6 @@ phi4-tools:
       <|tool|>
       {tools}
       <|/tool|>
-
-      For each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:
-      <tool_call>
-      [{"name": <function-name>, "arguments": <args-json-object>}]
-      </tool_call>
   user: "<|im_start|>user<|im_sep|>{prompt}<|im_end|>"
   assistant: "<|im_start|>assistant<|im_sep|>"
   stop:

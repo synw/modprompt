@@ -1,6 +1,6 @@
-import { LmTemplate, PromptBlock, TurnBlock, SpacingSlots, HistoryTurn, LmToolsDef, ToolSpec, ToolCallSpec } from "./interfaces.js";
+import { LmTemplate, PromptBlock, HistoryTurn, SpacingSlots, LmToolsDef, ToolSpec, ToolCallSpec, ToolTurn, LmTags } from "./interfaces.js";
 import { templates } from "./db.js";
-import { extractBetweenTags } from "./utils.js";
+import { extractBetweenTags, extractToolSpec } from "./utils.js";
 
 /**
  * Represents a modified language model template.
@@ -16,8 +16,9 @@ class PromptTemplate {
   history: Array<HistoryTurn> = [];
   toolsDef: LmToolsDef | null = null;
   tools: Array<ToolSpec> = [];
+  tags: LmTags = {};
   system?: PromptBlock;
-  shots?: Array<TurnBlock>;
+  shots?: Array<HistoryTurn>;
   stop?: Array<string>;
   linebreaks?: SpacingSlots;
   afterShot?: string;
@@ -49,12 +50,15 @@ class PromptTemplate {
     this.name = tpl.name;
     this.user = tpl.user;
     this.assistant = tpl.assistant;
-    this.system = tpl.system;
-    this.shots = tpl.shots;
-    this.stop = tpl.stop;
-    this.linebreaks = tpl.linebreaks;
-    this.afterShot = tpl.afterShot;
-    this.prefix = tpl.prefix;
+    this.system = tpl?.system;
+    this.shots = tpl?.shots;
+    this.stop = tpl?.stop;
+    this.linebreaks = tpl?.linebreaks;
+    this.afterShot = tpl?.afterShot;
+    this.prefix = tpl?.prefix;
+    if (tpl?.tags) {
+      this.tags = tpl?.tags;
+    }
     if (tpl?.tools) {
       this.toolsDef = tpl.tools;
       const toolCallStartEnd = this.toolsDef?.call.split("{tools}");
@@ -274,12 +278,12 @@ class PromptTemplate {
    * @example
    * tpl.addShot('Is it raining?', 'No, it is sunny.');
    */
-  addShot(user: string, assistant: string, tool?: string): PromptTemplate {
-    if (tool && !this.toolsDef) {
+  addShot(user: string, assistant: string, tools?: Record<string, ToolTurn>): PromptTemplate {
+    if (tools && !this.toolsDef) {
       throw new Error("This template does not support tools");
     }
     if (!this.shots) { this.shots = [] };
-    this.shots.push({ user, assistant, tool });
+    this.shots.push({ user, assistant, tools });
     return this;
   }
 
@@ -289,7 +293,7 @@ class PromptTemplate {
    * This function allows you to add multiple turns to the conversation. Each turn is represented by an object
    * with a 'user' property (the user's message) and an 'assistant' property (the assistant's response).
    *
-   * @param {Array<TurnBlock>} shots - An array of objects, where each object represents a user-assistant interaction.
+   * @param {Array<HistoryTurn>} shots - An array of objects, where each object represents a user-assistant interaction.
    * @returns {PromptTemplate} - A reference to the current `PromptTemplate` instance for chaining.
    *
    * @example
@@ -299,7 +303,7 @@ class PromptTemplate {
    *   { user: 'What is the weather like tomorrow?', assistant: 'I am sorry, but I can\'t predict the future.' }
    * ]);
    */
-  addShots(shots: Array<TurnBlock>): PromptTemplate {
+  addShots(shots: Array<HistoryTurn>): PromptTemplate {
     shots.forEach((s) => this.addShot(s.user, s.assistant));
     return this
   }
@@ -307,10 +311,10 @@ class PromptTemplate {
   /**
    * Render a turn block
    *
-   * @param {TurnBlock | HistoryTurn} shot the shot to render
+   * @param {HistoryTurn} shot the shot to render
    * @returns {string} ther rendered text
    */
-  renderShot(shot: TurnBlock | HistoryTurn): string {
+  renderShot(shot: HistoryTurn): string {
     const buf = [];
     //console.log("S user", shot.user);
     buf.push(this._buildUserBlock(shot.user));
@@ -322,8 +326,8 @@ class PromptTemplate {
       _assistantMsg += "\n\n"
     }*/
     buf.push(this._buildAssistantBlock(_assistantMsg));
-    if (shot?.tool) {
-      buf.push(this._buildToolResponse(shot.tool));
+    if (shot?.tools) {
+      buf.push(this._buildToolsResponse(shot.tools));
     }
     return buf.join("")
   }
@@ -374,7 +378,7 @@ class PromptTemplate {
       for (const turn of this.history) {
         buf.push(this.renderShot(turn));
       }
-      if (this.history[this.history.length - 1]?.tool) {
+      if (this.history[this.history.length - 1]?.tools) {
         isToolResponse = true
       }
     }
@@ -408,7 +412,16 @@ class PromptTemplate {
    * @param {HistoryTurn} turn the history turn
    * @returns {PromptTemplate}
    */
-  pushToHistory(turn: HistoryTurn): PromptTemplate {
+  pushToHistory(turn: HistoryTurn, extractThinking = true): PromptTemplate {
+    if (extractThinking) {
+      if (this.tags?.endThink && this.tags?.think) {
+        const tks = turn.assistant.split(this.tags.endThink);
+        if (tks.length > 1) {
+          turn.think = extractBetweenTags(turn.assistant, this.tags.think, this.tags.endThink);
+          turn.assistant = tks[1]
+        }
+      }
+    }
     this.history.push(turn)
     return this
   }
@@ -449,11 +462,15 @@ class PromptTemplate {
     return res
   }
 
-  private _buildToolResponse(txt: string): string {
+  private _buildToolsResponse(toolTurns: Record<string, ToolTurn>): string {
     if (!this.toolsDef) {
       throw new Error("No tools def in template to build tool response");
     }
-    return this.toolsDef.response.replace("{tools_response}", txt)
+    const buf = new Array<string>();
+    for (const v of Object.values(toolTurns)) {
+      buf.push(this.toolsDef.response.replace("{tools_response}", JSON.stringify(v.response)));
+    }
+    return buf.join("");
   }
 
   private _buildToolsBlock(raw = false): string {
@@ -495,7 +512,7 @@ class PromptTemplate {
   }
 
   private _buildAssistantBlock(msg?: string): string {
-    let buf = [];
+    let txt = "";
     let amsg = this.assistant;
     if (this?.linebreaks?.assistant) {
       amsg += "\n".repeat(this.linebreaks.assistant)
@@ -503,12 +520,12 @@ class PromptTemplate {
     if (this._extraAssistant.length > 0) {
       amsg += this._extraAssistant
     }
-    buf.push(amsg);
+    txt += amsg;
     if (msg) {
       // this is a shot
-      buf.push(msg)
+      txt += msg
     }
-    return buf.join("")
+    return txt
   }
 
   private _load(name: string): LmTemplate {
@@ -524,10 +541,8 @@ class PromptTemplate {
     }
   }
 
-
-
   private _parseToolCallString(raw: string): Array<ToolCallSpec> {
-    return extractBetweenTags(raw, this._toolCallStart, this._toolCallEnd ?? undefined)
+    return extractToolSpec(raw, this._toolCallStart, this._toolCallEnd ?? undefined)
   }
 }
 

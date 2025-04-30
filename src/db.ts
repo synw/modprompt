@@ -33,6 +33,10 @@ const templates: Record<string, LmTemplate> = {
     "system": {
       "schema": "<|im_start|>system\n{system}<|im_end|>"
     },
+    "tags": {
+      "endThink": "</think>",
+      "think": "<think>"
+    },
     "user": "<|im_start|>user\n{prompt}<|im_end|>"
   },
   "chatml-tools": {
@@ -51,6 +55,10 @@ const templates: Record<string, LmTemplate> = {
     "system": {
       "message": "You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
       "schema": "<|im_start|>system\n{system}<|im_end|>"
+    },
+    "tags": {
+      "endThink": "</think>",
+      "think": "<think>"
     },
     "tools": {
       "call": "<tool_call>\n{tools}\n</tool_call>",
@@ -455,7 +463,7 @@ const templates: Record<string, LmTemplate> = {
       "<|im_sep|>"
     ],
     "system": {
-      "message": "You are a helpful assistant with some tools.\n<|tool|>\n{tools}\n<|/tool|>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
+      "message": "You are a helpful assistant with some tools.\n<|tool|>\n{tools}\n<|/tool|>",
       "schema": "<|im_start|>system<|im_sep|>{system}<|im_end|>"
     },
     "tools": {

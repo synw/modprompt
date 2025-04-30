@@ -95,35 +95,6 @@ interface PromptBlock {
 }
 
 /**
- * Represents a single turn in a conversation, consisting of a user message followed by an assistant response.
- * 
- * @interface TurnBlock
- * @typedef {TurnBlock}
- * 
- * @example
- * const turnExample: TurnBlock = {
- *   user: 'What's the weather like?',
- *   assistant: 'It's sunny today!'
- * };
- */
-interface TurnBlock {
-  /**
-   * The message content from the user.
-   */
-  user: string;
-
-  /**
-   * The corresponding response from the assistant.
-   */
-  assistant: string;
-
-  /**
-   * Optional tool usage in the turn.
-   */
-  tool?: string;
-}
-
-/**
  * Definition of language model tools.
  *
  * @interface LmToolsDef
@@ -151,6 +122,11 @@ interface LmToolsDef {
    * The expected response format from the tool.
    */
   response: string;
+}
+
+interface LmTags {
+  think?: string;
+  endThink?: string;
 }
 
 /**
@@ -213,7 +189,7 @@ interface LmTemplate {
    * 
    * Useful for simulating multi-turn interactions.
    */
-  shots?: Array<TurnBlock>;
+  shots?: Array<HistoryTurn>;
 
   /**
    * Tool definitions for the template.
@@ -243,6 +219,8 @@ interface LmTemplate {
    * A prefix like a bos token to insert before content
    */
   prefix?: string;
+
+  tags?: LmTags;
 }
 
 /**
@@ -269,6 +247,11 @@ interface ImgData {
   data: string;
 }
 
+interface ToolTurn {
+  call: ToolCallSpec;
+  response: Array<Record<string, any>>;
+}
+
 /**
  * Represents a turn in the conversation history, including user and assistant messages, optional tool usage, and associated images.
  *
@@ -289,14 +272,19 @@ interface HistoryTurn {
   user: string;
 
   /**
-   * The corresponding response from the assistant.
+   * The final response from the assistant.
    */
   assistant: string;
 
   /**
-   * Optional tool usage in the turn.
+   * Optional thinking tag content
    */
-  tool?: string;
+  think?: string;
+
+  /**
+   * Optional tools usage in the turn.
+   */
+  tools?: Record<string, ToolTurn>;
 
   /**
    * Array of images associated with the turn.
@@ -352,11 +340,12 @@ interface ToolSpec {
 export {
   SpacingSlots,
   PromptBlock,
-  TurnBlock,
   LmTemplate,
   HistoryTurn,
   ImgData,
   LmToolsDef,
   ToolSpec,
   ToolCallSpec,
+  ToolTurn,
+  LmTags,
 }
