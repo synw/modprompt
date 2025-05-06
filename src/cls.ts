@@ -123,7 +123,8 @@ class PromptTemplate {
     if (!this.toolsDef) {
       throw new Error("can not encode tool response: the template has no tools definition")
     }
-    return this.toolsDef.response.replace("{tools_response}", `${response}`)
+    const resp = typeof response == "string" ? response : `${response}`;
+    return this.toolsDef.response.replace("{tools_response}", resp)
   }
 
   /**
