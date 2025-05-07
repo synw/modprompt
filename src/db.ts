@@ -34,8 +34,10 @@ const templates: Record<string, LmTemplate> = {
       "schema": "<|im_start|>system\n{system}<|im_end|>"
     },
     "tags": {
-      "endThink": "</think>",
-      "think": "<think>"
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      }
     },
     "user": "<|im_start|>user\n{prompt}<|im_end|>"
   },
@@ -57,8 +59,14 @@ const templates: Record<string, LmTemplate> = {
       "schema": "<|im_start|>system\n{system}<|im_end|>"
     },
     "tags": {
-      "endThink": "</think>",
-      "think": "<think>"
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      },
+      "toolCall": {
+        "end": "</tool_call>",
+        "start": "<tool_call>"
+      }
     },
     "tools": {
       "call": "<tool_call>\n{tools}\n</tool_call>",
@@ -257,6 +265,12 @@ const templates: Record<string, LmTemplate> = {
       "message": "You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.",
       "schema": "<|start_of_role|>system<|end_of_role|>{system}<|end_of_text|>"
     },
+    "tags": {
+      "toolCall": {
+        "end": "<|start_of_role|>",
+        "start": "<|tool_call|>"
+      }
+    },
     "tools": {
       "call": "<|tool_call|>{tools}",
       "def": "<|start_of_role|>tools<|end_of_role|>{tools}<|end_of_text|>",
@@ -308,6 +322,12 @@ const templates: Record<string, LmTemplate> = {
     "system": {
       "message": "You are a deep thinking AI, you may use extremely long chains of thought to deeply consider the problem and deliberate with yourself via systematic reasoning processes to help come to a correct solution prior to answering. You should enclose your thoughts and internal monologue inside <think> </think> tags, and then provide your solution or response to the problem.",
       "schema": "<|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>"
+    },
+    "tags": {
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      }
     },
     "user": "<|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|>"
   },
@@ -365,6 +385,12 @@ const templates: Record<string, LmTemplate> = {
     ],
     "system": {
       "schema": "[SYSTEM_PROMPT]{system}[/SYSTEM_PROMPT] "
+    },
+    "tags": {
+      "toolCall": {
+        "end": "[/TOOL_RESULTS]",
+        "start": "[TOOL_CALLS]"
+      }
     },
     "tools": {
       "call": "[TOOL_CALLS]{tools}",
@@ -465,6 +491,12 @@ const templates: Record<string, LmTemplate> = {
     "system": {
       "message": "You are a helpful assistant with some tools.\n<|tool|>\n{tools}\n<|/tool|>",
       "schema": "<|im_start|>system<|im_sep|>{system}<|im_end|>"
+    },
+    "tags": {
+      "toolCall": {
+        "end": "<|/tool_call|>",
+        "start": "<|tool_call|>"
+      }
     },
     "tools": {
       "call": "<|tool_call|>\n{tools}\n<|/tool_call|>",

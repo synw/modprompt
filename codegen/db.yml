@@ -30,8 +30,9 @@ chatml:
     - "<|im_end|>"
   afterShot: "<|im_end|>\n"
   tags:
-    think:  <think>
-    endThink: </think>
+    think:
+        start: <think>
+        end: </think>
 chatml-tools:
   id: "chatml-tools"
   name: "ChatMl tools"
@@ -73,8 +74,12 @@ chatml-tools:
       {tools_response}
       </tool_response><|im_end|>
   tags:
-    think:  <think>
-    endThink: </think>
+    think:
+      start: <think>
+      end: </think>
+    toolCall:
+      start: <tool_call>
+      end: </tool_call>
 codestral:
   id: codestral
   name: Codestral
@@ -256,6 +261,10 @@ granite-tools:
     system: 1
     tools: 1
   afterShot: "<|end_of_text|>\n"
+  tags:
+    toolCall:
+        start: <|tool_call|>
+        end: <|start_of_role|>
 llama:
   id: llama
   name: Llama
@@ -311,6 +320,10 @@ llama3-think:
       
       {system}<|eot_id|>
     message: "You are a deep thinking AI, you may use extremely long chains of thought to deeply consider the problem and deliberate with yourself via systematic reasoning processes to help come to a correct solution prior to answering. You should enclose your thoughts and internal monologue inside <think> </think> tags, and then provide your solution or response to the problem."
+  tags:
+    think:
+      start: <think>
+      end: </think>
 llava:
   id: llava
   name: Llava
@@ -360,6 +373,10 @@ mistral-system-tools:
     def: "[AVAILABLE_TOOLS]{tools}[/AVAILABLE_TOOLS]"
     call: "[TOOL_CALLS]{tools}"
     response: "[TOOL_RESULTS]{tools_response}[/TOOL_RESULTS]"
+  tags:
+    toolCall:
+      start: "[TOOL_CALLS]"
+      end: "[/TOOL_RESULTS]"
 nemotron:
   id: nemotron
   name: Nemotron
@@ -458,6 +475,10 @@ phi4-tools:
       <|tool_response|>
       {tools_response}
       <|/tool_response|><|im_end|>
+  tags:
+    toolCall:
+      start: <|tool_call|>
+      end: <|/tool_call|>
 reka:
   id: reka
   name: Reka

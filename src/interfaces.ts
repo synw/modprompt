@@ -125,8 +125,8 @@ interface LmToolsDef {
 }
 
 interface LmTags {
-  think?: string;
-  endThink?: string;
+  think?: { start: string, end: string };
+  toolCall?: { start: string, end: string };
 }
 
 /**

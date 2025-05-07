@@ -415,10 +415,10 @@ class PromptTemplate {
    */
   pushToHistory(turn: HistoryTurn, extractThinking = true): PromptTemplate {
     if (extractThinking) {
-      if (this.tags?.endThink && this.tags?.think) {
-        const tks = turn.assistant.split(this.tags.endThink);
+      if (this.tags?.think) {
+        const tks = turn.assistant.split(this.tags.think.end);
         if (tks.length > 1) {
-          turn.think = extractBetweenTags(turn.assistant, this.tags.think, this.tags.endThink);
+          turn.think = extractBetweenTags(turn.assistant, this.tags.think.start, this.tags.think.end);
           turn.assistant = tks[1]
         }
       }
