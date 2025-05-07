@@ -269,7 +269,7 @@ interface HistoryTurn {
   /**
    * The message content from the user.
    */
-  user: string;
+  user?: string;
 
   /**
    * The final response from the assistant.

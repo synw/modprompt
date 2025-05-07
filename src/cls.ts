@@ -147,7 +147,7 @@ class PromptTemplate {
     if (keepShots) {
       if (this?.shots) {
         this.shots.forEach((s) => {
-          tpl.addShot(s.user, s.assistant)
+          tpl.addShot(s)
         })
       }
     }
@@ -279,12 +279,12 @@ class PromptTemplate {
    * @example
    * tpl.addShot('Is it raining?', 'No, it is sunny.');
    */
-  addShot(user: string, assistant: string, tools?: Record<string, ToolTurn>): PromptTemplate {
-    if (tools && !this.toolsDef) {
+  addShot(t: HistoryTurn): PromptTemplate {
+    if (t.tools && !this.toolsDef) {
       throw new Error("This template does not support tools");
     }
     if (!this.shots) { this.shots = [] };
-    this.shots.push({ user, assistant, tools });
+    this.shots.push(t);
     return this;
   }
 
@@ -305,7 +305,7 @@ class PromptTemplate {
    * ]);
    */
   addShots(shots: Array<HistoryTurn>): PromptTemplate {
-    shots.forEach((s) => this.addShot(s.user, s.assistant));
+    shots.forEach((s) => this.addShot(s));
     return this
   }
 
@@ -419,7 +419,7 @@ class PromptTemplate {
         const tks = turn.assistant.split(this.tags.think.end);
         if (tks.length > 1) {
           turn.think = extractBetweenTags(turn.assistant, this.tags.think.start, this.tags.think.end);
-          turn.assistant = tks[1]
+          turn.assistant = tks[1].trim()
         }
       }
     }

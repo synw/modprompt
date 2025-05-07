@@ -78,6 +78,7 @@ async function main() {
         throw new Error(`Error processing tool call answer:\n, ${answer}`);
     }
     if (!isToolCall) {
+        console.log("no tools called")
         return
     }
     const toolsUsed = {};
@@ -90,16 +91,13 @@ async function main() {
         };
         console.log("> Tool response", tresp);
     });
-
-    //console.log("\nProcessed answer", isToolCall, toolsCall, error);
-    //return
     template.pushToHistory({
         user: prompt,
         assistant: res.text,
         tools: toolsUsed,
     });
     console.log("\n----------- Turn 2 prompt:");
-    const _nextPrompt = template.render();
+    const _nextPrompt = template.prompt();
     console.log(_nextPrompt);
     console.log("------------\n");
     const res2 = await lm.infer(_nextPrompt, {
@@ -111,13 +109,13 @@ async function main() {
         }
     });
     template.pushToHistory({
-        user: prompt,
         assistant: res2.text,
     });
-    //console.log(res2);
-    console.log("\n----------- Template history:");
+    console.log("\n\n----------- Template history:");
     console.log(JSON.stringify(template.history, null, "  "));
     console.log()
+    console.log("\n----------- Final template:");
+    console.log(template.render());
 }
 
 (async () => {
