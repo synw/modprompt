@@ -51,7 +51,8 @@ const tools = {
 async function main() {
     const template = new PromptTemplate(model.template)
         .addTool(tools.get_current_weather)
-        .addTool(tools.get_current_traffic);
+        .addTool(tools.get_current_traffic)
+        .afterSystem("\nYou are a touristic AI assistant");
     const lm = new Lm({
         providerType: "ollama",
         serverUrl: "http://localhost:11434",

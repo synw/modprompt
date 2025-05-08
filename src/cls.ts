@@ -98,10 +98,10 @@ class PromptTemplate {
     //console.log("TC SW", this._toolCallStart, ans.startsWith(this._toolCallStart));
     if (ans.includes(this._toolCallStart)) {
       isToolCall = true;
-      const tc = this._parseToolCallString(answer);
       //console.log("TCS", tc);
       let errMsg = "";
       try {
+        const tc = this._parseToolCallString(answer);
         //const tc = JSON.parse(tcs);
         if (!Array.isArray(tc)) {
           throw new Error(`error parsing tool call response from model: the response object is not an Array:\n${tc}`);
@@ -123,7 +123,10 @@ class PromptTemplate {
     if (!this.toolsDef) {
       throw new Error("can not encode tool response: the template has no tools definition")
     }
-    const resp = typeof response == "string" ? response : `${response}`;
+    if (!this.toolsDef.response.includes("{tools_response}")) {
+      throw new Error(`Template ${this.name} has invalid tool response format`);
+    }
+    const resp = typeof response == "string" ? response : JSON.stringify(response);
     return this.toolsDef.response.replace("{tools_response}", resp)
   }
 
@@ -144,26 +147,15 @@ class PromptTemplate {
    */
   cloneTo(template: string | LmTemplate, keepShots: boolean = true): PromptTemplate {
     const tpl = new PromptTemplate(template);
-    if (keepShots) {
-      if (this?.shots) {
-        this.shots.forEach((s) => {
-          tpl.addShot(s)
-        })
-      }
+    Object.assign(tpl, this); // Shallow copy all properties
+
+    if (!keepShots) {
+      tpl.shots = []; // Clear shots if keepShots is false
+    } else {
+      tpl.history = this.history.map(h => ({ ...h })); // Deep copy history
     }
-    if (this._extraSystem.length > 0) {
-      tpl.afterSystem(this._extraSystem)
-    }
-    if (this._replaceSystem.length > 0) {
-      tpl.replaceSystem(this._replaceSystem)
-    }
-    if (this._extraAssistant.length > 0) {
-      tpl.afterAssistant(this._extraAssistant)
-    }
-    if (this._replacePrompt.length > 0) {
-      tpl.replacePrompt(this._replacePrompt)
-    }
-    return tpl
+
+    return tpl;
   }
 
   /**
@@ -430,37 +422,29 @@ class PromptTemplate {
   private _buildSystemBlock(skip_empty_system: boolean, systemTools = false): string {
     let res = "";
     if (!this?.system) {
-      return ""
+      return "";
     }
-    if (this._replaceSystem.length > 0) {
-      this.system.message = this._replaceSystem;
+
+    // Combine original system.message with _extraSystem without mutation
+    let combinedMessage = this.system.message || "";
+    if (this._extraSystem) {
+      combinedMessage += this._extraSystem;
     }
-    //console.log("SYS MSG", this.system?.message);
-    if (this.system?.message) {
-      if (this._extraSystem.length > 0) {
-        this.system.message = this.system.message + this._extraSystem
-      }
-      //console.log("ES M", this.s);
-      res = this.system.schema.replace("{system}", this.system.message);
+
+    if (combinedMessage) {
+      res = this.system.schema.replace("{system}", combinedMessage);
     } else {
-      //console.log("NO SYS MSG");
-      if (this._extraSystem.length > 0) {
-        //console.log("EXTRA SYS", this._extraSystem);
-        //console.log("SYS SCHEMA", this.system.schema);
-        res = this.system.schema.replace("{system}", this._extraSystem);
-        //console.log("TMP SYS RES", res);
-      }
-    }
-    //console.log("SYS RES", res);
-    if (res == "") {
+      // Handle cases where system.message is empty but schema still needs to be present
       if (!skip_empty_system) {
-        res = this.system.schema;
+        res = this.system.schema.replace("{system}", "");
       }
     }
+
     if (systemTools && this.tools.length > 0) {
-      res = res.replace("{tools}", this._buildToolsBlock(true))
+      res = res.replace("{tools}", this._buildToolsBlock(true));
     }
-    return res
+
+    return res;
   }
 
   private _buildToolsResponse(toolTurns: Record<string, ToolTurn>): string {

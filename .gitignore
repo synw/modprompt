@@ -6,3 +6,4 @@ dist-ssr
 yarn.lock
 coverage/
 package-lock.json
+.vscode

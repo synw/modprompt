@@ -1,5 +1,4 @@
-
-import { templates, PromptTemplate, TurnBlock } from "../src/main";
+import { templates, PromptTemplate, HistoryTurn } from "../src/main";
 
 describe('templates', () => {
   it('base', async () => {
@@ -24,7 +23,7 @@ describe('templates', () => {
 
   it('shots', async () => {
     const tpl = new PromptTemplate(templates.vicuna);
-    tpl.addShot("2+2", "4");
+    tpl.addShot({ user: "2+2", assistant: "4" });
     /*const txt = `USER:
 2+2
 
@@ -68,10 +67,12 @@ USER:
 
   it('renderShot', async () => {
     const tpl = new PromptTemplate(templates.alpaca);
-    const shot: TurnBlock = { user: "What's the weather like?", assistant: "It's sunny today!" };
+    const shot: HistoryTurn = { user: "What's the weather like?", assistant: "It's sunny today!" };
     const rendered = tpl.renderShot(shot);
     expect(rendered).toContain("### Instruction:\nWhat's the weather like?\n\n### Response:It's sunny today!");
   });
+
+
 
   /*it('render with different scenarios', async () => {
     const tpl = new PromptTemplate(templates.mistral);
