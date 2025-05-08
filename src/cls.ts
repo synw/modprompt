@@ -426,7 +426,7 @@ class PromptTemplate {
     }
 
     // Combine original system.message with _extraSystem without mutation
-    let combinedMessage = this.system.message || "";
+    let combinedMessage = this._replaceSystem || (this.system.message || "");
     if (this._extraSystem) {
       combinedMessage += this._extraSystem;
     }
