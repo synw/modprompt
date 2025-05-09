@@ -47,7 +47,7 @@ function extractToolSpec(
     return parsed;
 
   } catch (error) {
-    throw new Error(`Error parsing tool response content: ${error}`);
+    throw new Error(`tool call parsing error: ${error}`);
   }
 }
 

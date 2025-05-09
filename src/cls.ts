@@ -109,7 +109,13 @@ class PromptTemplate {
         //console.log("TC", tc)
         toolsCall = tc;
       } catch (e) {
-        throw new Error(`error parsing tool call response from model:\n${answer}`);
+        const buf = new Array<string>();
+        buf.push("error parsing tool call from model:");
+        buf.push("------------- tool call ---------------");
+        buf.push(answer);
+        buf.push("----------- parsing error --------------");
+        buf.push(`${e}`);
+        throw new Error(buf.join("\n"));
       }
       if (errMsg) {
         return { isToolCall: false, toolsCall: [], error: errMsg };
