@@ -59,9 +59,7 @@ chatml-tools:
     assistant: 1
   stop:
     - "<|im_end|>"
-  afterShot: |-
-     <|im_end|>
-
+  afterShot: "<|im_end|>\n"
   tools:
     def: "{system}"
     call: |-
@@ -73,6 +71,7 @@ chatml-tools:
       <tool_response>
       {tools_response}
       </tool_response><|im_end|>
+      
   tags:
     think:
       start: <think>
@@ -211,6 +210,19 @@ gemma:
   stop:
     - "<end_of_turn>"
   afterShot: "<end_of_turn>"
+glm:
+  id: glm
+  name: Glm
+  prefix: "[gMASK]<sop>"
+  system: 
+    schema: <|system|>{system}
+  user: |-
+    <|user|>
+    {prompt}
+  assistant: <|assistant|>
+  stop: 
+    - "<sop>"
+  afterShot: "\n"
 granite:
   id: granite
   name: Granite

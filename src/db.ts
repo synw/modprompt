@@ -42,7 +42,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|im_start|>user\n{prompt}<|im_end|>"
   },
   "chatml-tools": {
-    "afterShot": "<|im_end|>",
+    "afterShot": "<|im_end|>\n",
     "assistant": "<|im_start|>assistant",
     "id": "chatml-tools",
     "linebreaks": {
@@ -208,6 +208,20 @@ const templates: Record<string, LmTemplate> = {
       "<end_of_turn>"
     ],
     "user": "<start_of_turn>user\n{prompt}\n <end_of_turn>\n "
+  },
+  "glm": {
+    "afterShot": "\n",
+    "assistant": "<|assistant|>",
+    "id": "glm",
+    "name": "Glm",
+    "prefix": "[gMASK]<sop>",
+    "stop": [
+      "<sop>"
+    ],
+    "system": {
+      "schema": "<|system|>{system}"
+    },
+    "user": "<|user|>\n{prompt}"
   },
   "granite": {
     "afterShot": "<|end_of_text|>\n",

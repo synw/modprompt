@@ -37,15 +37,17 @@ function extractToolSpec(
 ): ToolCallSpec[] {
   try {
     // Extract content
-    const content = extractBetweenTags(text, startTag, endTag)
-
+    let content = extractBetweenTags(text, startTag, endTag)
+    // try to patch malformed tool c
+    if (content.startsWith("[") && !content.endsWith("]")) {
+      content = content + "]"
+    }
     // Parse JSON content
     let parsed = JSON.parse(content);
     if (!Array.isArray(parsed)) {
       parsed = [parsed]
     }
     return parsed;
-
   } catch (error) {
     throw new Error(`tool call parsing error: ${error}`);
   }
