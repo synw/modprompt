@@ -182,7 +182,46 @@ deepseek3:
   stop:
     - "<｜end▁of▁sentence｜>"
     - "<｜tool▁calls▁end｜>"
+  afterShot: "<｜end▁of▁sentence｜>"  
+deepseek3-tools:
+  id: deepseek3-tools
+  name: Deepseek 3 tools
+  system:
+    schema: "<｜begin▁of▁sentence｜>{system}"
+    message: |-
+      ## Tools
+      You have access to the following tools:
+
+      {tools}
+
+      IMPORTANT: ALWAYS adhere to this exact format for tool use:
+      <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>tool_call_name<｜tool▁sep｜>tool_call_arguments<｜tool▁call▁end｜>{{additional_tool_calls}}<｜tool▁calls▁end｜>
+
+      Where:
+      - `tool_call_name` must be an exact match to one of the available tools
+      - `tool_call_arguments` must be valid JSON that strictly follows the tool's Parameters Schema
+      - For multiple tool calls, chain them directly without separators or spaces
+  user: "<｜User｜>{prompt}"
+  assistant: "<｜Assistant｜>"
+  linebreaks:
+    user: 2
+    system: 2
+  tools:
+    def: "{system}"
+    call: "<｜tool▁calls▁begin｜>{tools}<｜tool▁calls▁end｜>"
+    response: |-
+      <｜tool▁output▁begin｜>{tools_response}<｜tool▁output▁end｜>
+  stop:
+    - "<｜end▁of▁sentence｜>"
+    - "<｜tool▁calls▁end｜>"
   afterShot: "<｜end▁of▁sentence｜>"
+  tags:
+    think:
+      start: <think>
+      end: </think>
+    toolCall:
+      start: <｜tool▁call▁begin｜>
+      end: <｜tool▁call▁end｜>
 exaone:
   id: exaone
   name: Exaone

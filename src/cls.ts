@@ -1,4 +1,5 @@
-import { LmTemplate, PromptBlock, HistoryTurn, SpacingSlots, LmToolsDef, ToolSpec, ToolCallSpec, ToolTurn, LmTags } from "./interfaces.js";
+import { HistoryTurn } from "@locallm/types";
+import { LmTemplate, PromptBlock, SpacingSlots, LmToolsDef, ToolSpec, ToolCallSpec, ToolTurn, LmTags } from "./interfaces.js";
 import { templates } from "./db.js";
 import { extractBetweenTags, extractToolSpec } from "./utils.js";
 

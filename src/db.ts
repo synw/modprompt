@@ -181,6 +181,40 @@ const templates: Record<string, LmTemplate> = {
     },
     "user": "<｜User｜>{prompt}"
   },
+  "deepseek3-tools": {
+    "afterShot": "<｜end▁of▁sentence｜>",
+    "assistant": "<｜Assistant｜>",
+    "id": "deepseek3-tools",
+    "linebreaks": {
+      "system": 2,
+      "user": 2
+    },
+    "name": "Deepseek 3 tools",
+    "stop": [
+      "<｜end▁of▁sentence｜>",
+      "<｜tool▁calls▁end｜>"
+    ],
+    "system": {
+      "message": "## Tools\nYou have access to the following tools:\n\n{tools}\n\nIMPORTANT: ALWAYS adhere to this exact format for tool use:\n<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>tool_call_name<｜tool▁sep｜>tool_call_arguments<｜tool▁call▁end｜>{{additional_tool_calls}}<｜tool▁calls▁end｜>\n\nWhere:\n- `tool_call_name` must be an exact match to one of the available tools\n- `tool_call_arguments` must be valid JSON that strictly follows the tool's Parameters Schema\n- For multiple tool calls, chain them directly without separators or spaces",
+      "schema": "<｜begin▁of▁sentence｜>{system}"
+    },
+    "tags": {
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      },
+      "toolCall": {
+        "end": "<｜tool▁call▁end｜>",
+        "start": "<｜tool▁call▁begin｜>"
+      }
+    },
+    "tools": {
+      "call": "<｜tool▁calls▁begin｜>{tools}<｜tool▁calls▁end｜>",
+      "def": "{system}",
+      "response": "<｜tool▁output▁begin｜>{tools_response}<｜tool▁output▁end｜>"
+    },
+    "user": "<｜User｜>{prompt}"
+  },
   "exaone": {
     "afterShot": "[|endofturn|]",
     "assistant": "[|assistant|]",

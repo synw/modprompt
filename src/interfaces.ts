@@ -30,6 +30,8 @@
  * };
  */
 
+import { ToolCallSpec } from "@locallm/types/dist/interfaces";
+
 /**
  * Defines the spacing (in terms of line breaks) to be applied between different parts of the conversation.
  *
@@ -290,13 +292,6 @@ interface HistoryTurn {
    * Array of images associated with the turn.
    */
   images?: Array<ImgData>;
-}
-
-interface ToolCallSpec {
-  name?: string;
-  arguments?: {
-    [key: string]: string;
-  };
 }
 
 /**
