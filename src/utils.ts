@@ -1,4 +1,4 @@
-import { ToolCallSpec } from "./interfaces.js";
+import { ToolCallSpec } from "@locallm/types";
 
 function extractBetweenTags(
   text: string,

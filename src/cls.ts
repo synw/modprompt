@@ -1,5 +1,5 @@
-import { HistoryTurn } from "@locallm/types";
-import { LmTemplate, PromptBlock, SpacingSlots, LmToolsDef, ToolSpec, ToolCallSpec, ToolTurn, LmTags } from "./interfaces.js";
+import type { HistoryTurn, ToolDefSpec, ToolCallSpec, ToolTurn } from "@locallm/types";
+import { LmTemplate, PromptBlock, SpacingSlots, LmToolsDef, LmTags } from "./interfaces.js";
 import { templates } from "./db.js";
 import { extractBetweenTags, extractToolSpec } from "./utils.js";
 
@@ -16,7 +16,7 @@ class PromptTemplate {
   assistant: string;
   history: Array<HistoryTurn> = [];
   toolsDef: LmToolsDef | null = null;
-  tools: Array<ToolSpec> = [];
+  tools: Array<ToolDefSpec> = [];
   tags: LmTags = {};
   system?: PromptBlock;
   shots?: Array<HistoryTurn>;
@@ -80,7 +80,7 @@ class PromptTemplate {
     return this.tools.length > 0
   }
 
-  addTool(tool: ToolSpec): PromptTemplate {
+  addTool(tool: ToolDefSpec): PromptTemplate {
     if (!this?.toolsDef) {
       throw new Error("This template does not support tools");
     }
@@ -88,12 +88,12 @@ class PromptTemplate {
     return this;
   }
 
-  processAnswer(answer: string): { isToolCall: boolean; toolsCall: Array<Record<string, any>>; error?: string } {
+  processAnswer(answer: string): { isToolCall: boolean; toolsCall: Array<ToolCallSpec>; error?: string } {
     if (!this.hasTools) {
       return { isToolCall: false, toolsCall: [] };
     }
     let isToolCall = false;
-    let toolsCall = new Array<Record<string, any>>();
+    let toolsCall: Array<ToolCallSpec> = [];
     const ans = answer.trim();
     //console.log("\nTC ANSWER", ans);
     //console.log("TC SW", this._toolCallStart, ans.startsWith(this._toolCallStart));
@@ -327,7 +327,9 @@ class PromptTemplate {
     }*/
     buf.push(this._buildAssistantBlock(_assistantMsg));
     if (shot?.tools) {
-      buf.push(this._buildToolsResponse(shot.tools));
+      const tts: Record<string, ToolTurn> = {};
+      shot.tools.forEach(s => tts[s.call.id] = s)
+      buf.push(this._buildToolsResponse(tts));
     }
     return buf.join("")
   }
@@ -414,7 +416,7 @@ class PromptTemplate {
    */
   pushToHistory(turn: HistoryTurn, extractThinking = true): PromptTemplate {
     if (extractThinking) {
-      if (this.tags?.think) {
+      if (turn?.assistant && this.tags?.think) {
         const tks = turn.assistant.split(this.tags.think.end);
         if (tks.length > 1) {
           turn.think = extractBetweenTags(turn.assistant, this.tags.think.start, this.tags.think.end);
