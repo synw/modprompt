@@ -2,28 +2,9 @@
 import { Lm } from "@locallm/api";
 import { PromptTemplate } from "../dist/main.js";
 
-// Run an Ollama instance with one of these models:
-
-//const model = { name: "granite3.3:2b", template: "granite-tools" };
-//const model = { name: "qwen3:0.6b", template: "chatml-tools" };
-//const model = { name: "qwen3:1.7b", template: "chatml-tools" };
-const model = { name: "qwen3:4b", template: "chatml-tools" };
-//const model = { name: "qwen3:8b", template: "chatml-tools" };
-//const model = { name: "mistral-small3.1:24b", template: "mistral-system-tools" };
-
-//const prompt = "What is the current weather in London?";
+const templateName = "chatml-tools";
 const prompt = `I am landing in Barcelona soon: I plan to reach my hotel and then go for outdoor sport. 
 How are the conditions in the city?`;
-
-function get_current_weather(args) {
-    console.log("=> Running the get_current_weather tool with args", args);
-    return { "temperature": 24, "weather": "sunny" }
-}
-
-function get_current_traffic(args) {
-    console.log("Running the get_current_traffic tool with args", args);
-    return { "trafic": "heavy" }
-}
 
 const tools = {
     get_current_weather: {
@@ -34,7 +15,7 @@ const tools = {
                 "description": "The city and state, e.g. San Francisco, CA"
             }
         },
-        execute: (args) => get_current_weather(args)
+        execute: (args) => { return { "temperature": 24, "weather": "sunny" } }
     },
     get_current_traffic: {
         "name": "get_current_traffic",
@@ -44,37 +25,37 @@ const tools = {
                 "description": "The city and state, e.g. San Francisco, CA"
             }
         },
-        "execute": get_current_traffic,
+        execute: (args) => { return { "trafic": "heavy" } }
     }
 };
 
+const lm = new Lm({
+    providerType: "llamacpp",
+    serverUrl: "http://localhost:8080",
+    onToken: (t) => process.stdout.write(t),
+});
+
 async function main() {
-    const template = new PromptTemplate(model.template)
+    const template = new PromptTemplate(templateName)
         .addTool(tools.get_current_weather)
         .addTool(tools.get_current_traffic)
         .afterSystem("\nYou are a touristic AI assistant");
-    const lm = new Lm({
-        providerType: "ollama",
-        serverUrl: "http://localhost:11434",
-        onToken: (t) => process.stdout.write(t),
-    });
     process.on('SIGINT', () => {
         lm.abort().then(() => process.exit());
     });
-    await lm.loadModel(model.name, 4096);
-    console.log("Loaded model", lm.model);
     const _prompt = template.prompt(prompt);
     console.log("\n----------- Turn 1 prompt:");
     console.log(_prompt);
+    console.log("----------------------------");
+    console.log("Ingesting prompt ...\n");
     const res = await lm.infer(_prompt, {
         stream: true,
         temperature: 0.1,
-        max_tokens: 2048,
-        extra: {
-            raw: true
-        }
-    });
+        max_tokens: 4096
+    }, { debug: true });
+    console.log("Processing answer ...");
     const { isToolCall, toolsCall, error } = template.processAnswer(res.text);
+    console.log("Tool call:", isToolCall);
     if (error) {
         throw new Error(`Error processing tool call answer:\n, ${answer}`);
     }
@@ -104,11 +85,8 @@ async function main() {
     const res2 = await lm.infer(_nextPrompt, {
         stream: true,
         temperature: 0.1,
-        max_tokens: 1024,
-        extra: {
-            raw: true
-        }
-    });
+        max_tokens: 1024
+    }, { debug: true });
     template.pushToHistory({
         assistant: res2.text,
     });
