@@ -279,19 +279,18 @@ var templates = `{
     "user": "<|user|>\n{prompt}"
   },
   "gptoss": {
+    "assistant": "<|start|>assistant",
     "id": "gptoss",
+    "linebreaks": {
+      "assistant": 1,
+      "system": 1,
+      "user": 1
+    },
     "name": "Gpt Oss",
     "system": {
-      "assistant": "<|start|>assistant",
-      "linebreaks": {
-        "assistant": 1,
-        "shot": 1,
-        "system": 1,
-        "user": 1
-      },
-      "schema": "<|start|>system<|message|>\n{system}\n<|end|>",
-      "user": "<|start|>user<|message|>\n{prompt}\n<|end|>"
-    }
+      "schema": "<|start|>system<|message|>\n{system}\n<|end|>"
+    },
+    "user": "<|start|>user<|message|>\n{prompt}\n<|end|>"
   },
   "granite": {
     "afterShot": "<|end_of_text|>\n",
