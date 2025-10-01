@@ -48,6 +48,7 @@ var templates = `{
     "linebreaks": {
       "assistant": 1,
       "system": 1,
+      "tools": 1,
       "user": 1
     },
     "name": "ChatMl tools",
@@ -277,6 +278,21 @@ var templates = `{
     },
     "user": "<|user|>\n{prompt}"
   },
+  "gptoss": {
+    "id": "gptoss",
+    "name": "Gpt Oss",
+    "system": {
+      "assistant": "<|start|>assistant",
+      "linebreaks": {
+        "assistant": 1,
+        "shot": 1,
+        "system": 1,
+        "user": 1
+      },
+      "schema": "<|start|>system<|message|>\n{system}\n<|end|>",
+      "user": "<|start|>user<|message|>\n{prompt}\n<|end|>"
+    }
+  },
   "granite": {
     "afterShot": "<|end_of_text|>\n",
     "assistant": "<|start_of_role|>assistant<|end_of_role|>",
@@ -345,6 +361,66 @@ var templates = `{
       "response": "<|start_of_role|>tool_response<|end_of_role|>{tools_response}<|end_of_text|>\n"
     },
     "user": "<|start_of_role|>user<|end_of_role|>{prompt}<|end_of_text|>"
+  },
+  "lfm": {
+    "afterShot": "<|im_end|>\n",
+    "assistant": "<|im_start|>assistant",
+    "id": "lfm",
+    "linebreaks": {
+      "assistant": 1,
+      "system": 1,
+      "tools": 1,
+      "user": 1
+    },
+    "name": "Lfm 2",
+    "stop": [
+      "<|im_end|>"
+    ],
+    "system": {
+      "schema": "<|im_start|>system\n{system}<|im_end|>"
+    },
+    "tags": {
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      }
+    },
+    "user": "<|im_start|>user\n{prompt}<|im_end|>"
+  },
+  "lfm-tools": {
+    "afterShot": "<|im_end|>\n",
+    "assistant": "<|im_start|>assistant",
+    "id": "lfm-tools",
+    "linebreaks": {
+      "assistant": 1,
+      "system": 1,
+      "tools": 1,
+      "user": 1
+    },
+    "name": "Lfm 2 tools",
+    "stop": [
+      "<|im_end|>"
+    ],
+    "system": {
+      "message": "List of tools: <|tool_list_start|>{tools}<|tool_list_end|>",
+      "schema": "<|im_start|>system\n{system}<|im_end|>"
+    },
+    "tags": {
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      },
+      "toolCall": {
+        "end": "<|tool_call_end|>",
+        "start": "<|tool_call_start|>"
+      }
+    },
+    "tools": {
+      "call": "<|tool_call_start|>\n{tools}\n<|tool_call_end|>",
+      "def": "{system}",
+      "response": "<|im_start|>tool\n<|tool_response_start|>\n{tools_response}\n<|tool_response_end|><|im_end|>"
+    },
+    "user": "<|im_start|>user\n{prompt}<|im_end|>"
   },
   "llama": {
     "assistant": " [/INST] ",

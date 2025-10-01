@@ -57,6 +57,7 @@ chatml-tools:
     system: 1
     user: 1
     assistant: 1
+    tools: 1
   stop:
     - "<|im_end|>"
   afterShot: "<|im_end|>\n"
@@ -303,6 +304,25 @@ glm-tools:
       <tool_response>
       {tools_response}
       </tool_response>
+gptoss:
+  id: gptoss
+  name: Gpt Oss
+  system:
+    schema: |-
+      <|start|>system<|message|>
+      {system}
+      <|end|>
+    user: |-
+      <|start|>user<|message|>
+      {prompt}
+      <|end|>
+    assistant: |-
+      <|start|>assistant
+    linebreaks:
+      user: 1
+      system: 1
+      assistant: 1
+      shot: 1
 granite:
   id: granite
   name: Granite
@@ -357,6 +377,64 @@ granite-tools:
     toolCall:
         start: <|tool_call|>
         end: <|start_of_role|>
+lfm:
+  id: "lfm"
+  name: "Lfm 2"
+  system:
+    schema: "<|im_start|>system\n{system}<|im_end|>"
+  user: |-
+    <|im_start|>user
+    {prompt}<|im_end|>
+  assistant: "<|im_start|>assistant"
+  linebreaks:
+    system: 1
+    user: 1
+    assistant: 1
+    tools: 1
+  stop:
+    - "<|im_end|>"
+  afterShot: "<|im_end|>\n"
+  tags:
+    think:
+      start: <think>
+      end: </think>
+lfm-tools:
+  id: "lfm-tools"
+  name: "Lfm 2 tools"
+  system:
+    schema: "<|im_start|>system\n{system}<|im_end|>"
+    message: |-
+      List of tools: <|tool_list_start|>{tools}<|tool_list_end|>
+  user: |-
+    <|im_start|>user
+    {prompt}<|im_end|>
+  assistant: "<|im_start|>assistant"
+  linebreaks:
+    system: 1
+    user: 1
+    assistant: 1
+    tools: 1
+  stop:
+    - "<|im_end|>"
+  afterShot: "<|im_end|>\n"
+  tools:
+    def: "{system}"
+    call: |-
+      <|tool_call_start|>
+      {tools}
+      <|tool_call_end|>
+    response: |- 
+      <|im_start|>tool
+      <|tool_response_start|>
+      {tools_response}
+      <|tool_response_end|><|im_end|>
+  tags:
+    think:
+      start: <think>
+      end: </think>
+    toolCall:
+      start: <|tool_call_start|>
+      end: <|tool_call_end|>
 llama:
   id: llama
   name: Llama
