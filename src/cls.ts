@@ -61,6 +61,7 @@ class PromptTemplate {
       this.tags = tpl?.tags;
     }
     if (tpl?.tools) {
+      //console.log("TEMPLATE TOOLS", tpl.tools);
       this.toolsDef = tpl.tools;
       const toolCallStartEnd = this.toolsDef?.call.split("{tools}");
       if (!toolCallStartEnd) {
@@ -78,6 +79,102 @@ class PromptTemplate {
 
   get hasTools(): boolean {
     return this.tools.length > 0
+  }
+
+  /**
+ * Render a turn block
+ *
+ * @param {HistoryTurn} shot the shot to render
+ * @returns {string} ther rendered text
+ */
+  renderShot(shot: HistoryTurn): string {
+    const buf = [];
+    //console.log("S user", shot.user);
+    if (shot?.user) {
+      buf.push(this._buildUserBlock(shot.user));
+    }
+    //console.log("BS user", this._buildUserBlock(shot.user))
+    if (shot?.assistant) {
+      let _assistantMsg = shot.assistant;
+      if (this.afterShot) {
+        _assistantMsg += this.afterShot
+      } /*else {
+      _assistantMsg += "\n\n"
+    }*/
+      buf.push(this._buildAssistantBlock(_assistantMsg));
+    }
+    if (shot?.tools) {
+      const resp = this._buildToolsResponse(shot.tools);
+      buf.push(resp);
+      /*if (this?.linebreaks?.tools) {
+        buf.push("\n".repeat(this.linebreaks.tools))
+      }*/
+    }
+    return buf.join("")
+  }
+
+  /**
+   * Renders the template into a string representation.
+   * 
+   * @returns The rendered template as a string.
+   * 
+   * @example
+   * const rendered = tpl.render();
+   * console.log(rendered);
+   */
+  render(skip_empty_system: boolean = true): string {
+    const buf = new Array<string>();
+    // prefix
+    if (this.prefix) {
+      buf.push(this.prefix)
+    }
+    const hasSystemTools = this?.toolsDef?.def == "{system}";
+    // system prompt if any
+    const _systemBlock = this._buildSystemBlock(skip_empty_system, hasSystemTools);
+    if (_systemBlock.length > 0) {
+      buf.push(_systemBlock);
+      if (this?.linebreaks?.system) {
+        buf.push("\n".repeat(this.linebreaks.system))
+      }
+    }
+    // tools if any
+    if (this.toolsDef && !hasSystemTools) {
+      const _toolsBlock = this._buildToolsBlock();
+      if (_toolsBlock.length > 0) {
+        buf.push(_toolsBlock);
+        if (this?.linebreaks?.tools) {
+          buf.push("\n".repeat(this.linebreaks.tools))
+        }
+      }
+    }
+    // shots if any
+    if (this?.shots) {
+      for (const shot of this.shots) {
+        buf.push(this.renderShot(shot));
+      }
+    }
+    // history
+    let isToolResponse = false;
+    if (this.history.length > 0) {
+      for (const turn of this.history) {
+        buf.push(this.renderShot(turn));
+      }
+      if (this.history[this.history.length - 1]?.tools) {
+        isToolResponse = true
+      }
+    }
+    if (!isToolResponse) {
+      // user block
+      buf.push(this._buildUserBlock());
+      // assistant block      
+    } else {
+      if (this?.linebreaks?.tools) {
+        buf.push("\n".repeat(this.linebreaks.tools))
+      }
+    }
+    buf.push(this._buildAssistantBlock());
+    //console.log(buf)
+    return buf.join("");
   }
 
   addTool(tool: ToolDefSpec): PromptTemplate {
@@ -309,92 +406,6 @@ class PromptTemplate {
   }
 
   /**
-   * Render a turn block
-   *
-   * @param {HistoryTurn} shot the shot to render
-   * @returns {string} ther rendered text
-   */
-  renderShot(shot: HistoryTurn): string {
-    const buf = [];
-    //console.log("S user", shot.user);
-    buf.push(this._buildUserBlock(shot.user));
-    //console.log("BS user", this._buildUserBlock(shot.user))
-    let _assistantMsg = shot.assistant;
-    if (this.afterShot) {
-      _assistantMsg += this.afterShot
-    } /*else {
-      _assistantMsg += "\n\n"
-    }*/
-    buf.push(this._buildAssistantBlock(_assistantMsg));
-    if (shot?.tools) {
-      const tts: Record<string, ToolTurn> = {};
-      shot.tools.forEach(s => tts[s.call.id] = s)
-      buf.push(this._buildToolsResponse(tts));
-    }
-    return buf.join("")
-  }
-
-  /**
-   * Renders the template into a string representation.
-   * 
-   * @returns The rendered template as a string.
-   * 
-   * @example
-   * const rendered = tpl.render();
-   * console.log(rendered);
-   */
-  render(skip_empty_system: boolean = true): string {
-    const buf = new Array<string>();
-    // prefix
-    if (this.prefix) {
-      buf.push(this.prefix)
-    }
-    const hasSystemTools = this?.toolsDef?.def == "{system}";
-    // system prompt if any
-    const _systemBlock = this._buildSystemBlock(skip_empty_system, hasSystemTools);
-    if (_systemBlock.length > 0) {
-      buf.push(_systemBlock);
-      if (this?.linebreaks?.system) {
-        buf.push("\n".repeat(this.linebreaks.system))
-      }
-    }
-    // tools if any
-    if (this.toolsDef && !hasSystemTools) {
-      const _toolsBlock = this._buildToolsBlock();
-      if (_toolsBlock.length > 0) {
-        buf.push(_toolsBlock);
-        if (this?.linebreaks?.tools) {
-          buf.push("\n".repeat(this.linebreaks.tools))
-        }
-      }
-    }
-    // shots if any
-    if (this?.shots) {
-      for (const shot of this.shots) {
-        buf.push(this.renderShot(shot));
-      }
-    }
-    // history
-    let isToolResponse = false;
-    if (this.history.length > 0) {
-      for (const turn of this.history) {
-        buf.push(this.renderShot(turn));
-      }
-      if (this.history[this.history.length - 1]?.tools) {
-        isToolResponse = true
-      }
-    }
-    if (!isToolResponse) {
-      // user block
-      buf.push(this._buildUserBlock());
-      // assistant block      
-    }
-    buf.push(this._buildAssistantBlock());
-    //console.log(buf)
-    return buf.join("");
-  }
-
-  /**
   * Renders the template with the provided message replacing the `{prompt}` placeholder.
   * 
   * @param msg - The message to use for replacing the `{prompt}` placeholder.
@@ -456,13 +467,14 @@ class PromptTemplate {
     return res;
   }
 
-  private _buildToolsResponse(toolTurns: Record<string, ToolTurn>): string {
+  private _buildToolsResponse(toolTurns: Array<ToolTurn>): string {
     if (!this.toolsDef) {
       throw new Error("No tools def in template to build tool response");
     }
     const buf = new Array<string>();
-    for (const v of Object.values(toolTurns)) {
-      buf.push(this.toolsDef.response.replace("{tools_response}", JSON.stringify(v.response)));
+    //console.log("TOOL TURNS", toolTurns);
+    for (const tt of toolTurns) {
+      buf.push(this.toolsDef.response.replace("{tools_response}", JSON.stringify(tt.response)));
     }
     return buf.join("");
   }
