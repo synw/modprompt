@@ -421,6 +421,37 @@ var templates = `{
     },
     "user": "<|im_start|>user\n{prompt}<|im_end|>"
   },
+  "ling": {
+    "assistant": "<role>ASSISTANT</role>",
+    "id": "ling",
+    "linebreaks": {
+      "assistant": 1,
+      "user": 1
+    },
+    "name": "Ling",
+    "stop": [
+      "<|role_end|>"
+    ],
+    "user": "<role>HUMAN</role>{prompt}<|role_end|>"
+  },
+  "ling-tools": {
+    "assistant": "<role>ASSISTANT</role>",
+    "id": "ling-tools",
+    "name": "Ling tools",
+    "stop": [
+      "<|role_end|>"
+    ],
+    "system": {
+      "message": "You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
+      "schema": "<role>SYSTEM</role>{system}<|role_end|>"
+    },
+    "tools": {
+      "call": "<tool_call>\n{tools}\n</tool_call>",
+      "def": "{system}",
+      "response": "<role>OBSERVATION</role>\n<tool_response>\n{tools_response}\n</tool_response><|role_end|>"
+    },
+    "user": "<role>HUMAN</role>{prompt}<|role_end|>"
+  },
   "llama": {
     "assistant": " [/INST] ",
     "id": "llama",
@@ -494,6 +525,27 @@ var templates = `{
       "[|User|]"
     ],
     "user": "[|User|] {prompt} </s>"
+  },
+  "minimax": {
+    "afterShot": "\n",
+    "assistant": "]~b]ai",
+    "id": "minimax",
+    "name": "Minimax",
+    "prefix": "]~!b[",
+    "stop": [
+      "[e~[",
+      "]~b]user"
+    ],
+    "system": {
+      "message": "You are a helpful assistant.\n\n# Tools\nYou may call one or more tools to assist with the user query.\nHere are the tools available in JSONSchema format:\n\n<tools>\n{tools}\n</tools>\n\nWhen making tool calls, use XML format to invoke tools and pass parameters:\n\n<minimax:tool_call>\n<invoke name=\"tool-name-1\">\n<parameter name=\"param-key-1\">param-value-1</parameter>\n<parameter name=\"param-key-2\">param-value-2</parameter>\n...\n</invoke>",
+      "schema": "]~b]system"
+    },
+    "tools": {
+      "call": "<minimax:tool_call>\n{tools}\n</minimax:tool_call>",
+      "def": "\n{system}",
+      "response": "<minimax:tool_call>\n{tools_response}\n</minimax:tool_call>"
+    },
+    "user": "]~b]user\n{prompt}[e~["
   },
   "mistral": {
     "afterShot": "\n",

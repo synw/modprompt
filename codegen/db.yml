@@ -434,6 +434,49 @@ lfm-tools:
     toolCall:
       start: <|tool_call_start|>
       end: <|tool_call_end|>
+ling:
+  id: "ling"
+  name: "Ling"
+  user: |-
+    <role>HUMAN</role>{prompt}<|role_end|>
+  assistant: <role>ASSISTANT</role>
+  linebreaks:
+    user: 1
+    assistant: 1
+  stop:
+    - "<|role_end|>"
+ling-tools:
+  id: "ling-tools"
+  name: "Ling tools"
+  system:
+    schema: "<role>SYSTEM</role>{system}<|role_end|>"
+    message: |-
+      You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.
+      You are provided with function signatures within <tools></tools> XML tags:
+      <tools>
+      {tools}
+      </tools>
+      
+      For each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:
+      <tool_call>
+      [{"name": <function-name>, "arguments": <args-json-object>}]
+      </tool_call>
+  user: |-
+    <role>HUMAN</role>{prompt}<|role_end|>
+  assistant: <role>ASSISTANT</role>
+  stop:
+    - "<|role_end|>"
+  tools:
+    def: "{system}"
+    call: |-
+      <tool_call>
+      {tools}
+      </tool_call>
+    response: |- 
+      <role>OBSERVATION</role>
+      <tool_response>
+      {tools_response}
+      </tool_response><|role_end|>
 llama:
   id: llama
   name: Llama
@@ -510,6 +553,47 @@ minichat:
     - "[|User|]"
   afterShot: "\n"
   prefix: "<s> "
+minimax:
+  id: minimax
+  name: Minimax
+  system:
+    schema: "]~b]system"
+    message: |-
+      You are a helpful assistant.
+
+      # Tools
+      You may call one or more tools to assist with the user query.
+      Here are the tools available in JSONSchema format:
+
+      <tools>
+      {tools}
+      </tools>
+
+      When making tool calls, use XML format to invoke tools and pass parameters:
+
+      <minimax:tool_call>
+      <invoke name="tool-name-1">
+      <parameter name="param-key-1">param-value-1</parameter>
+      <parameter name="param-key-2">param-value-2</parameter>
+      ...
+      </invoke>
+  user: "]~b]user\n{prompt}[e~["
+  assistant: "]~b]ai"
+  stop:
+    - "[e~["
+    - "]~b]user"
+  afterShot: "\n"
+  prefix: "]~!b["
+  tools:
+    def: "\n{system}"
+    call: |-
+      <minimax:tool_call>
+      {tools}
+      </minimax:tool_call>
+    response: |-
+      <minimax:tool_call>
+      {tools_response}
+      </minimax:tool_call>
 mistral:
   id: mistral
   name: Mistral
