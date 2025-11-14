@@ -45,9 +45,9 @@ chatml-tools:
       {tools}
       </tools>
       
-      For each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:
+      For function calls, return a json array of objects with function names and arguments within <tool_call></tool_call> XML tags:
       <tool_call>
-      [{"name": <function-name>, "arguments": <args-json-object>}]
+      [{"name": <function-name>, "arguments": <args-json-object>}, {"name": <function-name>, "arguments": <args-json-object>}]
       </tool_call>
   user: |-
     <|im_start|>user
@@ -457,9 +457,9 @@ ling-tools:
       {tools}
       </tools>
       
-      For each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:
+      For function calls, return a json array of objects with function names and arguments within <tool_call></tool_call> XML tags:
       <tool_call>
-      [{"name": <function-name>, "arguments": <args-json-object>}]
+      [{"name": <function-name>, "arguments": <args-json-object>}, {"name": <function-name>, "arguments": <args-json-object>}]
       </tool_call>
   user: |-
     <role>HUMAN</role>{prompt}<|role_end|>

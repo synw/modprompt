@@ -56,7 +56,7 @@ const templates: Record<string, LmTemplate> = {
       "<|im_end|>"
     ],
     "system": {
-      "message": "You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
+      "message": "You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor function calls, return a json array of objects with function names and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}, {\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
       "schema": "<|im_start|>system\n{system}<|im_end|>"
     },
     "tags": {
@@ -442,7 +442,7 @@ const templates: Record<string, LmTemplate> = {
       "<|role_end|>"
     ],
     "system": {
-      "message": "You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
+      "message": "You are a helpful assistant with tool calling capabilities. You may call one or more functions to assist with the user query.\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor function calls, return a json array of objects with function names and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n[{\"name\": <function-name>, \"arguments\": <args-json-object>}, {\"name\": <function-name>, \"arguments\": <args-json-object>}]\n</tool_call>",
       "schema": "<role>SYSTEM</role>{system}<|role_end|>"
     },
     "tools": {

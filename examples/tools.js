@@ -4,7 +4,8 @@ import { PromptTemplate } from "../dist/main.js";
 
 const templateName = "chatml-tools";
 const prompt = `I am landing in Barcelona soon: I plan to reach my hotel and then go for outdoor sport. 
-How are the conditions in the city?`;
+How are the conditions in the city? Use your tools to get weather and traffic information.`;
+const model = "qwen4b";
 
 const tools = {
     get_current_weather: {
@@ -35,12 +36,14 @@ const lm = new Lm({
     onToken: (t) => process.stdout.write(t),
 });
 
-async function main() {
+async function main()
+{
     const template = new PromptTemplate(templateName)
         .addTool(tools.get_current_weather)
         .addTool(tools.get_current_traffic)
         .afterSystem("\nYou are a touristic AI assistant");
-    process.on('SIGINT', () => {
+    process.on('SIGINT', () =>
+    {
         lm.abort().then(() => process.exit());
     });
     const _prompt = template.prompt(prompt);
@@ -50,8 +53,9 @@ async function main() {
     console.log("Ingesting prompt ...\n");
     const res = await lm.infer(_prompt, {
         stream: true,
-        temperature: 0.1,
-        max_tokens: 4096
+        temperature: 0.3,
+        max_tokens: 4096,
+        model: { name: model },
     }, { debug: true });
     console.log("Processing answer ...");
     const { isToolCall, toolsCall, error } = template.processAnswer(res.text);
@@ -63,14 +67,15 @@ async function main() {
         console.log("no tools called")
         return
     }
-    const toolsUsed = {};
-    toolsCall.forEach((tc) => {
+    const toolsUsed = [];
+    toolsCall.forEach((tc) =>
+    {
         console.log("\n> Executing tool call:", tc);
         const tresp = tools[tc.name].execute(tc.arguments);
-        toolsUsed[tc.name] = {
+        toolsUsed.push({
             call: tc,
             response: tresp,
-        };
+        });
         console.log("> Tool response", tresp);
     });
     template.pushToHistory({
@@ -85,7 +90,8 @@ async function main() {
     const res2 = await lm.infer(_nextPrompt, {
         stream: true,
         temperature: 0.1,
-        max_tokens: 1024
+        max_tokens: 1024,
+        model: { name: model },
     }, { debug: true });
     template.pushToHistory({
         assistant: res2.text,
@@ -97,7 +103,8 @@ async function main() {
     console.log(template.render());
 }
 
-(async () => {
+(async () =>
+{
     await main();
 })();
 
