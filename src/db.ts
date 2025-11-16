@@ -279,7 +279,7 @@ const templates: Record<string, LmTemplate> = {
     "user": "<|user|>\n{prompt}"
   },
   "gptoss": {
-    "assistant": "<|start|>assistant",
+    "assistant": "",
     "id": "gptoss",
     "linebreaks": {
       "assistant": 1,
@@ -289,6 +289,12 @@ const templates: Record<string, LmTemplate> = {
     "name": "Gpt Oss",
     "system": {
       "schema": "<|start|>system<|message|>\n{system}\n<|end|>"
+    },
+    "tags": {
+      "think": {
+        "end": "<|end|><|start|>assistant<|channel|>final<|message|>",
+        "start": "<|channel|>analysis<|message|>"
+      }
     },
     "user": "<|start|>user<|message|>\n{prompt}\n<|end|>"
   },

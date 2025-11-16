@@ -316,12 +316,15 @@ gptoss:
     <|start|>user<|message|>
     {prompt}
     <|end|>
-  assistant: |-
-    <|start|>assistant
+  assistant: ""
   linebreaks:
     user: 1
     system: 1
     assistant: 1
+  tags:
+    think:
+      start: <|channel|>analysis<|message|>
+      end: <|end|><|start|>assistant<|channel|>final<|message|>
 granite:
   id: granite
   name: Granite
