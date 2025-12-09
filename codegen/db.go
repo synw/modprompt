@@ -93,13 +93,10 @@ var templates = `{
     "user": "[INST] {prompt}"
   },
   "command-r": {
+    "afterShot": "<|END_OF_TURN_TOKEN|>",
     "assistant": "<|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>",
     "id": "command-r",
-    "linebreaks": {
-      "user": 1
-    },
     "name": "Command-R",
-    "prefix": "<BOS_TOKEN>",
     "stop": [
       "<|END_OF_TURN_TOKEN|>"
     ],

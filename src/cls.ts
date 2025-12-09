@@ -91,8 +91,8 @@ class PromptTemplate {
     const buf = [];
     //console.log("S user", shot.user);
     if (shot?.user) {
-      //buf.push(this._buildUserBlock(shot.user));
-      buf.push(shot.user)
+      buf.push(this._buildUserBlock(shot.user));
+      //buf.push(shot.user)
     }
     //console.log("BS user", this._buildUserBlock(shot.user))
     if (shot?.assistant) {
@@ -512,7 +512,6 @@ class PromptTemplate {
     }
     if (msg) {
       // this is a shot
-      //buf[0] = _userBlock.replace("{prompt}", msg);
       buf[0] = this.user.replace("{prompt}", msg);
     }
     return buf.join("")
