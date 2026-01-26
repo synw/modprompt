@@ -2,10 +2,10 @@
 import { Lm } from "@locallm/api";
 import { PromptTemplate } from "../dist/main.js";
 
-const templateName = "chatml-tools";
+const templateName = "glm-tools";
 const prompt = `I am landing in Barcelona soon: I plan to reach my hotel and then go for outdoor sport. 
 How are the conditions in the city? Use your tools to get weather and traffic information.`;
-const model = "qwen4b";
+const model = "glmflash";
 
 const tools = {
     get_current_weather: {
@@ -16,17 +16,20 @@ const tools = {
                 "description": "The city and state, e.g. San Francisco, CA"
             }
         },
-        execute: (args) => { return { "temperature": 24, "weather": "sunny" } }
+        execute: (args) => { return { "temperature": 24, "weather": "sunny" }; }
     },
     get_current_traffic: {
         "name": "get_current_traffic",
         "description": "Get the current road traffic conditions",
         "arguments": {
-            "location": {
-                "description": "The city and state, e.g. San Francisco, CA"
+            "city": {
+                "description": "The city"
+            },
+            "country": {
+                "description": "The country"
             }
         },
-        execute: (args) => { return { "trafic": "heavy" } }
+        execute: (args) => { return { "trafic": "heavy" }; }
     }
 };
 
@@ -36,7 +39,7 @@ const lm = new Lm({
     onToken: (t) => process.stdout.write(t),
 });
 
-async function main()
+async function main ()
 {
     const template = new PromptTemplate(templateName)
         .addTool(tools.get_current_weather)
@@ -53,7 +56,9 @@ async function main()
     console.log("Ingesting prompt ...\n");
     const res = await lm.infer(_prompt, {
         stream: true,
-        temperature: 0.3,
+        temperature: 0.7,
+        top_p: 1,
+        min_p: 0.01,
         max_tokens: 4096,
         model: { name: model },
     }, { debug: true });
@@ -64,8 +69,8 @@ async function main()
         throw new Error(`Error processing tool call answer:\n, ${answer}`);
     }
     if (!isToolCall) {
-        console.log("no tools called")
-        return
+        console.log("no tools called");
+        return;
     }
     const toolsUsed = [];
     toolsCall.forEach((tc) =>
@@ -89,7 +94,9 @@ async function main()
     console.log("------------\n");
     const res2 = await lm.infer(_nextPrompt, {
         stream: true,
-        temperature: 0.1,
+        temperature: 0.7,
+        top_p: 1,
+        min_p: 0.01,
         max_tokens: 1024,
         model: { name: model },
     }, { debug: true });
@@ -98,7 +105,7 @@ async function main()
     });
     console.log("\n\n----------- Template history:");
     console.log(JSON.stringify(template.history, null, "  "));
-    console.log()
+    console.log();
     console.log("\n----------- Final template:");
     console.log(template.render());
 }

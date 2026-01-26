@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@locallm/api": "0.6.2",
+    "@locallm/api": "^0.7.3",
     "modprompt": "^0.12.3"
   }
 }
