@@ -196,8 +196,8 @@ class PromptTemplate {
     let isToolCall = false;
     let toolsCall: Array<ToolCallSpec> = [];
     const ans = answer.trim();
-    console.log("\nTC ANSWER", ans);
-    console.log("TC SW", this._toolCallStart + "||", ans.includes(this._toolCallStart));
+    //console.log("\nTC ANSWER", ans);
+    //console.log("TC SW", this._toolCallStart + "||", ans.includes(this._toolCallStart));
     if (ans.includes(this._toolCallStart)) {
       isToolCall = true;
       //console.log("TCS", tc);
