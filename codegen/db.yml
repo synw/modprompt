@@ -258,6 +258,10 @@ glm:
     <|user|>
     {prompt}
   assistant: <|assistant|>
+  tags:
+    think:
+      start: <think>
+      end: </think>
   stop: 
     - "<sop>"
   afterShot: "\n"
@@ -292,16 +296,22 @@ glm-tools:
   stop: 
     - "<sop>"
   afterShot: "\n"
+  tags:
+    think:
+      start: <think>
+      end: </think>
+    toolCall:
+      start: <tool_call>
+      end: </tool_call>
   tools:
+    parser: glm
     def: "{system}"
     call: |-
       <tool_call>
       {tools}
       </tool_call>
-    response: |- 
-      <tool_response>
-      {tools_response}
-      </tool_response>
+    beforeResponse: "<|observation|>\n"
+    response: <tool_response>{tools_response}</tool_response>
 gptoss:
   id: gptoss
   name: Gpt Oss

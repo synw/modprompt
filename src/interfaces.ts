@@ -92,6 +92,8 @@ interface LmToolsDef {
    * The expected response format from the tool.
    */
   response: string;
+  beforeResponse?: string;
+  parser?: string;
 }
 
 interface LmTags {

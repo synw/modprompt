@@ -253,6 +253,12 @@ const templates: Record<string, LmTemplate> = {
     "system": {
       "schema": "<|system|>{system}"
     },
+    "tags": {
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      }
+    },
     "user": "<|user|>\n{prompt}"
   },
   "glm-tools": {
@@ -268,10 +274,22 @@ const templates: Record<string, LmTemplate> = {
       "message": "# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{tools}\n</tools>\n\nFor each function call, output the function name and arguments within the following XML format:\n<tool_call>{function-name}\n<arg_key>{arg-key-1}</arg_key>\n<arg_value>{arg-value-1}</arg_value>\n<arg_key>{arg-key-2}</arg_key>\n<arg_value>{arg-value-2}</arg_value>\n...\n</tool_call>",
       "schema": "<|system|>{system}"
     },
+    "tags": {
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      },
+      "toolCall": {
+        "end": "</tool_call>",
+        "start": "<tool_call>"
+      }
+    },
     "tools": {
+      "beforeResponse": "<|observation|>\n",
       "call": "<tool_call>\n{tools}\n</tool_call>",
       "def": "{system}",
-      "response": "<tool_response>\n{tools_response}\n</tool_response>"
+      "parser": "glm",
+      "response": "<tool_response>{tools_response}</tool_response>"
     },
     "user": "<|user|>\n{prompt}"
   },

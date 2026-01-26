@@ -1,7 +1,8 @@
-import type { HistoryTurn, ToolDefSpec, ToolCallSpec, ToolTurn } from "@locallm/types";
-import { LmTemplate, PromptBlock, SpacingSlots, LmToolsDef, LmTags } from "./interfaces.js";
+import type { HistoryTurn, ToolCallSpec, ToolDefSpec, ToolTurn } from "@locallm/types";
 import { templates } from "./db.js";
-import { extractBetweenTags, extractToolSpec } from "./utils.js";
+import { LmTags, LmTemplate, LmToolsDef, PromptBlock, SpacingSlots } from "./interfaces.js";
+import { routeToolResponseParsing } from "./tools/router.js";
+import { extractBetweenTags } from "./utils.js";
 
 /**
  * Represents a modified language model template.
@@ -31,6 +32,8 @@ class PromptTemplate {
   private _replaceSystem = "";
   private _toolCallStart: string = "";
   private _toolCallEnd: string | null = null;
+  private _toolCallParser: string | null = null;
+  private _beforeToolResponse: string | null = null;
 
   /**
    * Constructs a new `PromptTemplate` instance.
@@ -70,10 +73,10 @@ class PromptTemplate {
       if (toolCallStartEnd.length == 0) {
         throw new Error(`Tool definition malformed in template ${this.name}: no start tool call definition`)
       }
-      this._toolCallStart = toolCallStartEnd[0];
-      if (toolCallStartEnd.length > 1) {
-        this._toolCallEnd = toolCallStartEnd[1]
-      }
+      this._toolCallStart = this.tags?.toolCall?.start || "";
+      this._toolCallEnd = this.tags?.toolCall?.end || null;
+      this._toolCallParser = tpl?.tools?.parser ?? null;
+      this._beforeToolResponse = tpl?.tools?.beforeResponse ?? null;
     }
   }
 
@@ -193,14 +196,28 @@ class PromptTemplate {
     let isToolCall = false;
     let toolsCall: Array<ToolCallSpec> = [];
     const ans = answer.trim();
-    //console.log("\nTC ANSWER", ans);
-    //console.log("TC SW", this._toolCallStart, ans.startsWith(this._toolCallStart));
+    console.log("\nTC ANSWER", ans);
+    console.log("TC SW", this._toolCallStart + "||", ans.includes(this._toolCallStart));
     if (ans.includes(this._toolCallStart)) {
       isToolCall = true;
       //console.log("TCS", tc);
+      let rawTc: string;
+      if (ans.startsWith(this._toolCallStart)) {
+        rawTc = ans;
+      } else {
+        const index = ans.indexOf(this._toolCallStart);
+        //const answerText = ans.slice(0, index);
+        //console.log("Answer text:", answerText);
+        rawTc = ans.slice(index);
+      }
       let errMsg = "";
       try {
-        const tc = this._parseToolCallString(answer);
+        const tc = routeToolResponseParsing(
+          rawTc,
+          this._toolCallStart,
+          this._toolCallEnd ?? undefined,
+          this._toolCallParser ?? undefined
+        )
         //const tc = JSON.parse(tcs);
         if (!Array.isArray(tc)) {
           throw new Error(`error parsing tool call response from model: the response object is not an Array:\n${tc}`);
@@ -224,7 +241,7 @@ class PromptTemplate {
     return { isToolCall: isToolCall, toolsCall: toolsCall };
   }
 
-  encodeToolResponse(response: any): string {
+  /*encodeToolResponse(response: any): string {
     if (!this.toolsDef) {
       throw new Error("can not encode tool response: the template has no tools definition")
     }
@@ -233,7 +250,7 @@ class PromptTemplate {
     }
     const resp = typeof response == "string" ? response : JSON.stringify(response);
     return this.toolsDef.response.replace("{tools_response}", resp)
-  }
+  }*/
 
   /**
    * Clones the current `PromptTemplate` instance to a new instance of `PromptTemplate`.
@@ -413,7 +430,7 @@ class PromptTemplate {
   * @returns The rendered template with the provided message.
   * 
   * @example
-  * const prompted = tpl.prompt("list the planets in the solar system");
+  * const prompted = tpl.prompt("list the planets of the solar system");
   * console.log(prompted);
   */
   prompt(msg: string, skip_empty_system: boolean = true): string {
@@ -477,7 +494,11 @@ class PromptTemplate {
     for (const tt of toolTurns) {
       buf.push(this.toolsDef.response.replace("{tools_response}", JSON.stringify(tt.response)));
     }
-    return buf.join("");
+    let tr = buf.join("");
+    if (this._beforeToolResponse) {
+      tr = this._beforeToolResponse + tr;
+    }
+    return tr
   }
 
   private _buildToolsBlock(raw = false): string {
@@ -546,10 +567,6 @@ class PromptTemplate {
       throw new Error(`Error loading template ${name}: ${err}`)
     }
   }
-
-  private _parseToolCallString(raw: string): Array<ToolCallSpec> {
-    return extractToolSpec(raw, this._toolCallStart, this._toolCallEnd ?? undefined)
-  }
 }
 
-export { PromptTemplate }
+export { PromptTemplate };
