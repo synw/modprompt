@@ -5,7 +5,7 @@ import { extractJsonToolSpec } from "./json.js";
 function routeToolResponseParsing(
     text: string,
     startTag: string,
-    endTag?: string,
+    endTag: string,
     parser?: string
 ): ToolCallSpec[] {
     if (!parser) {

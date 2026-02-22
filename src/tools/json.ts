@@ -1,20 +1,29 @@
 import type { ToolCallSpec } from "@locallm/types";
-import { extractBetweenTags } from "../utils.js";
 
 function extractJsonToolSpec(
     text: string,
     startTag: string,
-    endTag?: string
+    endTag: string
 ): ToolCallSpec[] {
     try {
-        // Extract content
-        let content = extractBetweenTags(text, startTag, endTag)
-        // Parse JSON content
-        let parsed = JSON.parse(content);
-        if (!Array.isArray(parsed)) {
-            parsed = [parsed]
+        const _rtcs = text.trim().split(endTag).map(t => t.replace(startTag, ""));
+        const rtcs = new Array<string>();
+        _rtcs.forEach(r => {
+            if (r.length > 0) {
+                rtcs.push(r.trim().replace(startTag, ""))
+            }
+        })
+        const tcs = new Array<ToolCallSpec>();
+        for (const content of rtcs) {
+            // Extract content
+            // Parse JSON content
+            let parsed = JSON.parse(content);
+            if (!parsed?.id) {
+                parsed.id = crypto.randomUUID();
+            }
+            tcs.push(parsed);
         }
-        return parsed;
+        return tcs
     } catch (error) {
         throw new Error(`tool call parsing error: ${error}`);
     }

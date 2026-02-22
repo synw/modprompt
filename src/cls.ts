@@ -189,11 +189,12 @@ class PromptTemplate {
     return this;
   }
 
-  processAnswer(answer: string): { isToolCall: boolean; toolsCall: Array<ToolCallSpec>; error?: string } {
+  processAnswer(answer: string): { isToolCall: boolean; toolsCall: Array<ToolCallSpec>; assistant?: string; error?: string } {
     if (!this.hasTools) {
       return { isToolCall: false, toolsCall: [] };
     }
     let isToolCall = false;
+    let assistant = "";
     let toolsCall: Array<ToolCallSpec> = [];
     const ans = answer.trim();
     //console.log("\nTC ANSWER", ans);
@@ -206,8 +207,9 @@ class PromptTemplate {
         rawTc = ans;
       } else {
         const index = ans.indexOf(this._toolCallStart);
-        //const answerText = ans.slice(0, index);
+        const answerText = ans.slice(0, index);
         //console.log("Answer text:", answerText);
+        assistant = answerText;
         rawTc = ans.slice(index);
       }
       let errMsg = "";
@@ -215,7 +217,7 @@ class PromptTemplate {
         const tc = routeToolResponseParsing(
           rawTc,
           this._toolCallStart,
-          this._toolCallEnd ?? undefined,
+          this._toolCallEnd ?? "",
           this._toolCallParser ?? undefined
         )
         //const tc = JSON.parse(tcs);
@@ -238,7 +240,13 @@ class PromptTemplate {
       }
     }
     //console.log("FTC", isToolCall, toolsCall);
-    return { isToolCall: isToolCall, toolsCall: toolsCall };
+    const resp: { isToolCall: boolean; toolsCall: Array<ToolCallSpec>; assistant?: string; error?: string } = {
+      isToolCall: isToolCall, toolsCall: toolsCall
+    };
+    if (assistant.length > 0) {
+      resp.assistant = assistant
+    }
+    return resp
   }
 
   /*encodeToolResponse(response: any): string {

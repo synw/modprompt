@@ -17,15 +17,14 @@ function extractGlmToolSpec(
         for (const rtc of rtcs) {
             if (!rtc.includes("<arg_key>")) {
                 const tc: ToolCallSpec = {
-                    id: "",
-                    name: rtc
+                    id: crypto.randomUUID(),
+                    name: rtc.trim()
                 };
                 tcs.push(tc)
             } else {
                 const idx = rtc.indexOf("<arg_key>");
-                const name = rtc.slice(0, idx);
+                const name = rtc.slice(0, idx).trim();
                 const rawtc = rtc.slice(idx);
-                //console.log("RAWTC", rawtc);
                 const args: Record<string, string> = {};
                 const parts = rawtc.split(/<\/arg_key>|<\/arg_value>/).filter(part => part.trim());
                 let currentKey = '';
@@ -38,7 +37,7 @@ function extractGlmToolSpec(
                     }
                 }
                 tcs.push({
-                    id: `call_${Date.now()}`,
+                    id: crypto.randomUUID(),
                     name,
                     arguments: Object.keys(args).length > 0 ? args : undefined
                 });

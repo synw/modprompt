@@ -1,6 +1,6 @@
 {
   "name": "modprompt",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Prompt templates for language models",
   "license": "MIT",
   "scripts": {
@@ -9,15 +9,16 @@
     "docs": "typedoc --entryPointStrategy expand"
   },
   "devDependencies": {
-    "@locallm/types": "^0.6.7",
+    "@locallm/types": "^0.7.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/expect": "^24.3.2",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.10",
+    "@types/node": "^25.3.0",
     "jest": "^30.2.0",
-    "rollup": "^4.56.0",
+    "restmix": "^0.6.1",
+    "rollup": "^4.59.0",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
