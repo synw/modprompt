@@ -1,4 +1,4 @@
-import type { ToolCallSpec } from "@locallm/types";
+import type { ToolCallSpec, ToolDefSpec } from "@locallm/types";
 
 function extractJsonToolSpec(
     text: string,

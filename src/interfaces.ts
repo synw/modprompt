@@ -93,7 +93,9 @@ interface LmToolsDef {
    */
   response: string;
   beforeResponse?: string;
+  afterResponse?: string;
   parser?: string;
+  builder?: string;
 }
 
 interface LmTags {

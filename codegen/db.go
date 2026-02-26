@@ -76,6 +76,45 @@ var templates = `{
     },
     "user": "<|im_start|>user\n{prompt}<|im_end|>"
   },
+  "chatml-xmltools": {
+    "afterShot": "<|im_end|>\n",
+    "assistant": "<|im_start|>assistant",
+    "id": "chatml-xmltools",
+    "linebreaks": {
+      "assistant": 1,
+      "system": 1,
+      "tools": 1,
+      "user": 1
+    },
+    "name": "ChatMl Xml tools",
+    "stop": [
+      "<|im_end|>"
+    ],
+    "system": {
+      "message": "You are a helpful assistant.\n\nYou have access to the following functions:\n\n<tools>\n{tools}\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT>",
+      "schema": "<|im_start|>system\n{system}<|im_end|>"
+    },
+    "tags": {
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      },
+      "toolCall": {
+        "end": "</tool_call>",
+        "start": "<tool_call>"
+      }
+    },
+    "tools": {
+      "afterResponse": "<|im_end|>\n",
+      "beforeResponse": "<|im_start|>user\n",
+      "builder": "qwen",
+      "call": "<tool_call>\n{tools}\n</tool_call>",
+      "def": "{system}",
+      "parser": "qwen",
+      "response": "<tool_response>\n{tools_response}\n</tool_response>\n"
+    },
+    "user": "<|im_start|>user\n{prompt}<|im_end|>"
+  },
   "codestral": {
     "afterShot": "\n",
     "assistant": " [/INST]",

@@ -3,6 +3,7 @@ import { templates } from "./db.js";
 import { LmTags, LmTemplate, LmToolsDef, PromptBlock, SpacingSlots } from "./interfaces.js";
 import { routeToolResponseParsing } from "./tools/router.js";
 import { extractBetweenTags } from "./utils.js";
+import { buildQwenToolDef } from "./tools/qwen.js";
 
 /**
  * Represents a modified language model template.
@@ -33,7 +34,9 @@ class PromptTemplate {
   private _toolCallStart: string = "";
   private _toolCallEnd: string | null = null;
   private _toolCallParser: string | null = null;
+  private _toolCallBuilder: string | null = null;
   private _beforeToolResponse: string | null = null;
+  private _afterToolResponse: string | null = null;
 
   /**
    * Constructs a new `PromptTemplate` instance.
@@ -76,7 +79,9 @@ class PromptTemplate {
       this._toolCallStart = this.tags?.toolCall?.start || "";
       this._toolCallEnd = this.tags?.toolCall?.end || null;
       this._toolCallParser = tpl?.tools?.parser ?? null;
+      this._toolCallBuilder = tpl?.tools?.builder ?? null;
       this._beforeToolResponse = tpl?.tools?.beforeResponse ?? null;
+      this._afterToolResponse = tpl?.tools?.afterResponse ?? null;
     }
   }
 
@@ -196,7 +201,7 @@ class PromptTemplate {
     let isToolCall = false;
     let assistant = "";
     let toolsCall: Array<ToolCallSpec> = [];
-    const ans = answer.trim();
+    let ans = answer.trim();
     //console.log("\nTC ANSWER", ans);
     //console.log("TC SW", this._toolCallStart + "||", ans.includes(this._toolCallStart));
     if (ans.includes(this._toolCallStart)) {
@@ -238,12 +243,14 @@ class PromptTemplate {
       if (errMsg) {
         return { isToolCall: false, toolsCall: [], error: errMsg };
       }
+    } else {
+      assistant = ans
     }
     //console.log("FTC", isToolCall, toolsCall);
     const resp: { isToolCall: boolean; toolsCall: Array<ToolCallSpec>; assistant?: string; error?: string } = {
       isToolCall: isToolCall, toolsCall: toolsCall
     };
-    if (assistant.length > 0) {
+    if (ans.length > 0) {
       resp.assistant = assistant
     }
     return resp
@@ -502,9 +509,13 @@ class PromptTemplate {
     for (const tt of toolTurns) {
       buf.push(this.toolsDef.response.replace("{tools_response}", JSON.stringify(tt.response)));
     }
-    let tr = buf.join("");
+    let tr = "";
     if (this._beforeToolResponse) {
-      tr = this._beforeToolResponse + tr;
+      tr = this._beforeToolResponse;
+    }
+    tr = tr + buf.join("");
+    if (this._afterToolResponse) {
+      tr = tr + this._afterToolResponse;
     }
     return tr
   }
@@ -517,7 +528,12 @@ class PromptTemplate {
     if (this.tools.length == 0) {
       return ""
     }
-    const _t = JSON.stringify(this.tools);
+    let _t: string;
+    if (this._toolCallBuilder == "qwen") {
+      _t = buildQwenToolDef(this.tools)
+    } else {
+      _t = JSON.stringify(this.tools);
+    }
     if (raw) {
       return _t
     }

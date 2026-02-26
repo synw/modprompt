@@ -1,6 +1,7 @@
 import type { ToolCallSpec } from "@locallm/types";
 import { extractGlmToolSpec } from "./glm.js";
 import { extractJsonToolSpec } from "./json.js";
+import { extractQwenToolSpec } from "./qwen.js";
 
 function routeToolResponseParsing(
     text: string,
@@ -12,6 +13,8 @@ function routeToolResponseParsing(
         return extractJsonToolSpec(text, startTag, endTag)
     } else if (parser == "glm") {
         return extractGlmToolSpec(text, startTag, endTag)
+    } else if (parser == "qwen") {
+        return extractQwenToolSpec(text, startTag, endTag)
     } else {
         throw new Error(`unknown tool response parser ${parser}`)
     }
