@@ -196,7 +196,7 @@ class PromptTemplate {
 
   processAnswer(answer: string): { isToolCall: boolean; toolsCall: Array<ToolCallSpec>; assistant?: string; error?: string } {
     if (!this.hasTools) {
-      return { isToolCall: false, toolsCall: [] };
+      return { isToolCall: false, toolsCall: [], assistant: answer };
     }
     let isToolCall = false;
     let assistant = "";
@@ -250,7 +250,7 @@ class PromptTemplate {
     const resp: { isToolCall: boolean; toolsCall: Array<ToolCallSpec>; assistant?: string; error?: string } = {
       isToolCall: isToolCall, toolsCall: toolsCall
     };
-    if (ans.length > 0) {
+    if (assistant.length > 0) {
       resp.assistant = assistant
     }
     return resp
