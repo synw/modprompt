@@ -280,6 +280,31 @@ var templates = `{
     ],
     "user": "<start_of_turn>user\n{prompt}\n <end_of_turn>\n "
   },
+  "gemma4": {
+    "afterShot": "\n",
+    "assistant": "<|turn>model\n",
+    "id": "gemma4",
+    "name": "Gemma 4",
+    "system": {
+      "schema": "<|turn>system{system}\n<|tool>{tools}<tool|>"
+    },
+    "tags": {
+      "think": {
+        "end": "</think>",
+        "start": "<think>"
+      },
+      "toolCall": {
+        "end": "<tool_call|>",
+        "start": "<|tool_call>"
+      }
+    },
+    "tools": {
+      "call": "<|tool_call>call: {tools}<tool_call|>",
+      "def": "{system}",
+      "response": "<|tool_response>{tools_response}<tool_response|>"
+    },
+    "user": "<|turn>user\n{prompt}"
+  },
   "glm": {
     "afterShot": "\n",
     "assistant": "<|assistant|>",
@@ -461,7 +486,7 @@ var templates = `{
       "<|im_end|>"
     ],
     "system": {
-      "message": "List of tools: <|tool_list_start|>{tools}<|tool_list_end|>",
+      "message": "List of tools: [{tools}]",
       "schema": "<|im_start|>system\n{system}<|im_end|>"
     },
     "tags": {

@@ -314,6 +314,26 @@ gemma:
   stop:
     - "<end_of_turn>"
   afterShot: "<end_of_turn>"
+gemma4:
+  id: gemma4
+  name: Gemma 4
+  system: 
+    schema: "<|turn>system{system}\n<|tool>{tools}<tool|>"
+  user: "<|turn>user\n{prompt}"
+  assistant: "<|turn>model\n"
+  tags:
+    think:
+      start: <think>
+      end: </think>
+    toolCall:
+      start: <|tool_call>
+      end: <tool_call|>
+  tools:
+    def: "{system}"
+    call: |-
+      <|tool_call>call: {tools}<tool_call|>
+    response: <|tool_response>{tools_response}<tool_response|>
+  afterShot: "\n"
 glm:
   id: glm
   name: Glm
@@ -480,7 +500,7 @@ lfm-tools:
   system:
     schema: "<|im_start|>system\n{system}<|im_end|>"
     message: |-
-      List of tools: <|tool_list_start|>{tools}<|tool_list_end|>
+      List of tools: [{tools}]
   user: |-
     <|im_start|>user
     {prompt}<|im_end|>

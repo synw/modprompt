@@ -1,10 +1,10 @@
 {
   "name": "modprompt",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "description": "Prompt templates for language models",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist/* && rollup -c",
+    "build": "cd codegen && go run main.go && cd .. && rm -rf dist/* && rollup -c",
     "test": "jest --coverage",
     "docs": "typedoc --entryPointStrategy expand"
   },
